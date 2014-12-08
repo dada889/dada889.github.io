@@ -1,0 +1,41 @@
+---
+title: "Titanic: Machine Learning from Disaster"
+layout: post
+categories: [R]
+tags: [R, Kaggle]
+---
+
+##Introduction
+This blog is wrote by R Markdown.
+
+This article following the idea of [One Approach to Deriving a Model](https://github.com/wehrley/wehrley.github.io/blob/master/SOUPTONUTS.md). The introduction of the data set is in [Titanic survival prediction challenge](https://www.kaggle.com/c/titanic-gettingStarted).
+
+##Getting Start
+Let's load this two data (train and test) into R. I use empty space to replace the missing data.
+```{r, echo=FALSE}
+setwd("/media/htt/Ha/MOOC/Kaggle/Titanic")
+train.column.types = c('integer', 'factor', 'factor', 'character', 'factor', 'numeric', 'integer', 'integer', 'character', 'numeric', 'character', 'factor')
+train = read.csv('train.csv', colClasses = train.column.types, na.strings = c(NA, ''))
+test = read.csv('test.csv', colClasses = train.column.types[-2], na.strings = c(NA, ''))
+```
+```{r, eval=FALSE}
+train = read.csv('train.csv', colClasses = train.column.types, na.strings = c(NA, ''))
+test = read.csv('test.csv', colClasses = train.column.types[-2], na.strings = c(NA, ''))
+```
+A view of the data set 
+```{r, echo=FALSE}
+head(train,n=3)
+```
+
+
+See the distribution of missing data in training set.
+```{r, echo=FALSE}
+require(Amelia)
+missmap(train,y.labels=seq(0,999,by=100),y.at=c(1,seq(0,999,by=100)), main="Missing data in training set")
+```
+
+
+
+
+
+

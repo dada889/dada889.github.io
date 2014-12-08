@@ -1,0 +1,33 @@
+# Site settings
+title: Nothing About Data
+email: htt.22@hotmail.com
+description: > # 
+  This blog power by Github and Jekyll.
+
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://dada889.github.io" # the base hostname & protocol for your site
+twitter_username: Nothing about data
+github_username:  Nothing about data
+zhihu_username:   
+permalink: :year/:month/:title.html
+
+# Build settings
+markdown: kramdown
+
+
+JB :
+  version : 0.2.13
+  # Settings for comments helper
+  comments :
+    provider : disqus
+    disqus :
+      short_name : httpdada889githubio
+    livefyre :
+      site_id : 123
+    intensedebate :
+      account : 123abc
+    facebook :
+      appid : 123
+      num_posts: 5
+      width: 580
+      colorscheme: light

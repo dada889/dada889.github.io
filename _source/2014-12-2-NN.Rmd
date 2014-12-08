@@ -1,0 +1,139 @@
+---
+layout: post
+title: "Digit Recognizer by Neural Network"
+categories: [R]
+tags: [neural network, machine learning, kaggle]
+
+---
+
+### Intorduction    
+This algorithm is for a [kaggle competition](https://www.kaggle.com/c/digit-recognizer) to take an image of a handwritten single digit, and determine what that digit is. The data used is [MNIST data](https://www.kaggle.com/c/digit-recognizer/data).     
+
+The trainning data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels in total.  
+
+Here is the data for handwritten 1:
+```{r,echo=T}
+sample_data <- read.csv("train.csv", header=TRUE,nrows=10)
+matrix(sample_data[1,-1],28,28)
+```
+
+
+
+
+
+Let's visualize some sample data:     
+```{r,echo=T}
+require(graphics)
+
+flip = function(x) {
+  xx=matrix(0,nrow(x),ncol(x))
+  for (i in (1:nrow(x))){
+    xx[i,] = rev(x[i,])}
+  return(xx)}
+
+sample_plot = function(x,n) {
+  xx = list()
+  par(mfrow=c(sqrt(n), sqrt(n)),mar=rep(0.2,4))
+  for (i in 1:n) {
+    temp = as.numeric(x[i,])
+    temp = matrix(temp,28,28)
+    xx[[i]] = flip(temp)
+    image(z=xx[[i]], col=gray.colors(12),xaxt='n',yaxt='n',ann=FALSE)
+  }}
+
+sample_p <- read.csv("train.csv", header=TRUE,nrows=100)
+sample_p = sample_p[,-1]
+sample_plot(sample_p,64)
+```
+
+
+
+
+### Neural Network Algorithm  
+
+
+The General Neural Newwork model shows below:
+
+$$
+z^{(l+1)} = a^{(l)}(\Theta^{(l)})^T 
+$$
+
+$$
+a^{(l+1)} = f_{\theta}(z^{(l+1)}) 
+$$
+
+Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):
+![NN graph][101]
+
+
+
+For classification problem, we use Cross-entropy cost function:    
+
+$$
+J(\Theta)= -\frac{1}{m}  \left[  \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}  
+  + (1-y^{(i)}_k ) log( 1- f_\theta (z^{(i)})_{k} )  \right]     
+$$
+
+or the simple version:
+
+$$
+J(\Theta)= -\frac{1}{m} \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}      
+$$
+
+
+From the cost function $J(\Theta)$, we have derivatives:
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  \frac{f_{\theta}(z^{(l+1)})}{\partial z^{(l+1)}} \frac{\partial z^{(l+1)}}{\partial \Theta^{(l)}}
+$$
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  (y-f_{\theta}(z^{(l+1)}))^Ta^{l}
+$$
+
+
+Here is the R code for the neural network. This model include two hidden layers with 25 units in first hidden layer 16 units in second hidden layer. I  minimize $J(\Theta)$ by gradient descent, called back-propagation in the setting.    
+
+
+```{r, eval=FALSE}
+  a1 = cbind(1,data)
+  z2 = a1%*%t(Theta1)
+  a2 = cbind(1,sigmoid(z2)) #add the bias term
+  z3 = a2%*%t(Theta2)
+  a3 = cbind(1,sigmoid(z3)) #add the bias term
+  z4 = a3%*%t(Theta3)
+  h = sigmoid(z4)
+  # reshape the y
+  ny = matrix(0, length(y),num_labels)
+  for (i in 1:length(y)){
+    ny[i,y[i]] = 1}
+  
+  # cost function
+  regu = lambda*(sum(Theta1[,-1]^2) + sum(Theta2[,-1]^2) + sum(Theta3[,-1]^2))/(2*m)
+  cost = -sum(ny*log(h)+(1-ny)*log(1-h))/m+regu
+
+  # back propagation
+  delta4 = h-ny
+  delta3 = (delta4%*%Theta3[,-1])*sigmoidGradient(z3)
+  delta2 = (delta3%*%Theta2[,-1])*sigmoidGradient(z2)
+  # add the bias term
+  thres1 = matrix(1,nrow(Theta1),ncol(Theta1))
+  thres1[,1] = 0
+  thres2 = matrix(1,nrow(Theta2),ncol(Theta2))
+  thres2[,1] = 0
+  thres3 = matrix(1,nrow(Theta3),ncol(Theta3))
+  Theta1_grad = (t(delta2)%*%a1)/m + thres1*Theta1*lambda/m
+  Theta2_grad = (t(delta3)%*%a2)/m + thres2*Theta2*lambda/m
+  Theta3_grad = (t(delta4)%*%a3)/m + thres3*Theta3*lambda/m
+```
+
+
+
+
+
+
+
+
+
+
+[101]:tikz12.png "NN"
