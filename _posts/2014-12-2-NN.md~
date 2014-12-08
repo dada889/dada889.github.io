@@ -168,7 +168,7 @@ For classification problem, we use Cross-entropy cost function:
 $$
 J(\Theta)= -\frac{1}{m}  \left[  \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}  
   + (1-y^{(i)}_k ) log( 1- f_\theta (z^{(i)})_{k} )  \right]     
-  $$
+$$
 
 or the simple version:
 
@@ -233,4 +233,4 @@ Here is the R code for the neural network. This model include two hidden layers 
 
 
 
-[101]:tikz12.png "NN"
+[101]:/figure/source/2014-12-2-NN/tikz12.png "NN"
