@@ -9,16 +9,7 @@ tags: [neural network, machine learning, kaggle]
 ### Intorduction    
 This algorithm is for a [kaggle competition](https://www.kaggle.com/c/digit-recognizer) to take an image of a handwritten single digit, and determine what that digit is. The data used is [MNIST data](https://www.kaggle.com/c/digit-recognizer/data).     
 
-The trainning data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels in total.  
-
-Here is the data for handwritten 1:
-```{r,echo=T}
-sample_data <- read.csv("train.csv", header=TRUE,nrows=10)
-matrix(sample_data[1,-1],28,28)
-```
-
-
-
+The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  
 
 
 Let's visualize some sample data:     
@@ -41,9 +32,9 @@ sample_plot = function(x,n) {
     image(z=xx[[i]], col=gray.colors(12),xaxt='n',yaxt='n',ann=FALSE)
   }}
 
-sample_p <- read.csv("train.csv", header=TRUE,nrows=100)
+sample_p <- read.csv("sample.csv", header=TRUE)[,-1]
 sample_p = sample_p[,-1]
-sample_plot(sample_p,64)
+sample_plot(sample_p,16)
 ```
 
 
@@ -51,89 +42,328 @@ sample_plot(sample_p,64)
 
 ### Neural Network Algorithm  
 
+#### Forward Propagation
 
-The General Neural Newwork model shows below:
+The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.
 
-$$
-z^{(l+1)} = a^{(l)}(\Theta^{(l)})^T 
-$$
 
 $$
-a^{(l+1)} = f_{\theta}(z^{(l+1)}) 
+a^{(1)} = \Theta^{(1)}_0+X^{(0)}(\Theta^{(1)})^T
+$$
+
+$$
+z^{(1)} = f_{\theta}(a^{(1)})
+$$
+
+$$
+a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
+$$
+
+$$
+\hat{Y} = f_{\theta}(a^{(2)})
 $$
 
 Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):
 ![NN graph][101]
 
-
+#### Cost Function
 
 For classification problem, we use Cross-entropy cost function:    
 
 $$
-J(\Theta)= -\frac{1}{m}  \left[  \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}  
-  + (1-y^{(i)}_k ) log( 1- f_\theta (z^{(i)})_{k} )  \right]     
+J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}  
+  + (1-y^{(i)}_k ) log( 1- f_\theta (a^{(i)})_{k} )  \right]     
 $$
 
 or the simple version:
 
 $$
-J(\Theta)= -\frac{1}{m} \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}      
+J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
+$$
+
+#### Back Propagation
+
+From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}}
+$$
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  (y-f_{\theta}(a^{(2)}))^Tz^{(1)}
+$$
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial \Theta^{(1)}}
+$$
+
+$$
+\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} = \frac{\partial J(\Theta)}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} X^{(0)}
 $$
 
 
-From the cost function $J(\Theta)$, we have derivatives:
-
-$$
-\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  \frac{f_{\theta}(z^{(l+1)})}{\partial z^{(l+1)}} \frac{\partial z^{(l+1)}}{\partial \Theta^{(l)}}
-$$
-
-$$
-\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  (y-f_{\theta}(z^{(l+1)}))^Ta^{l}
-$$
+Here is the R code for the neural network. This model include 25 units in the hidden layer. $J(\Theta)$ can be minimize by gradient descent, called back-propagation in the setting.    
 
 
-Here is the R code for the neural network. This model include two hidden layers with 25 units in first hidden layer 16 units in second hidden layer. I  minimize $J(\Theta)$ by gradient descent, called back-propagation in the setting.    
+```{r, eval=T}
+NN_cost = function(data, y, init, h_layer=25, lambda=0, num_labels=10) {
+  
+  m = nrow(data)
+  # reshape Theta1 and Theta2
+  in_layer = ncol(data)
+  par_t1 = init[c(1:((in_layer+1)*h_layer))]
 
-
-```{r, eval=FALSE}
+  par_t2 = init[c(((in_layer+1)*h_layer+1):length(init))]
+  Theta1 = matrix(par_t1,h_layer,in_layer+1)
+  Theta2 = matrix(par_t2,num_labels,h_layer+1)
+  
+  
   a1 = cbind(1,data)
   z2 = a1%*%t(Theta1)
-  a2 = cbind(1,sigmoid(z2)) #add the bias term
+  a2 = cbind(1,sigmoid(z2))
   z3 = a2%*%t(Theta2)
-  a3 = cbind(1,sigmoid(z3)) #add the bias term
-  z4 = a3%*%t(Theta3)
-  h = sigmoid(z4)
-  # reshape the y
+  h = sigmoid(z3)
+  
   ny = matrix(0, length(y),num_labels)
   for (i in 1:length(y)){
-    ny[i,y[i]] = 1}
+    ny[i,y[i]] = 1
+  }
   
-  # cost function
-  regu = lambda*(sum(Theta1[,-1]^2) + sum(Theta2[,-1]^2) + sum(Theta3[,-1]^2))/(2*m)
+  regu = lambda*(sum(Theta1[,-1]^2)+sum(Theta2[,-1]^2))/(2*m)
   cost = -sum(ny*log(h)+(1-ny)*log(1-h))/m+regu
-
-  # back propagation
-  delta4 = h-ny
-  delta3 = (delta4%*%Theta3[,-1])*sigmoidGradient(z3)
+  
+  delta3 = h-ny
   delta2 = (delta3%*%Theta2[,-1])*sigmoidGradient(z2)
-  # add the bias term
+  
   thres1 = matrix(1,nrow(Theta1),ncol(Theta1))
   thres1[,1] = 0
   thres2 = matrix(1,nrow(Theta2),ncol(Theta2))
   thres2[,1] = 0
-  thres3 = matrix(1,nrow(Theta3),ncol(Theta3))
+  
   Theta1_grad = (t(delta2)%*%a1)/m + thres1*Theta1*lambda/m
   Theta2_grad = (t(delta3)%*%a2)/m + thres2*Theta2*lambda/m
-  Theta3_grad = (t(delta4)%*%a3)/m + thres3*Theta3*lambda/m
+  
+  result = list(cost=cost,h=h,grad=list(t1=Theta1_grad,t2=Theta2_grad))
+  return(result)
+}
+
+```
+
+### Train The Model
+
+First, we randomly select 70% of data as training data set.
+```{r,echo=T, eval=F}
+data_all <- read.csv("train.csv", header=TRUE)
+train_size = floor(0.7*nrow(data_all))
+train_indx = sample(seq_len(nrow(data_all)), size = train_size)
+```
+
+Preprocess and normalize data.
+```{r,echo=T, eval=F}
+data = data_all[train_indx,]
+train = data[,-1]
+train = data.matrix(train)
+y = data$label
+y=replace(y,y==0,10)
+train_nl = (train-125)/255
+```
+
+Build up the initial value and training variables.
+```{r,echo=T, eval=F}
+h_layer=25
+t1_epsilon = sqrt(6)/sqrt(ncol(train)+h_layer)
+t2_epsilon = sqrt(6)/sqrt(h_layer+10)
+t1_random = matrix(runif((ncol(train)+1)*25,0,1),25,(ncol(train)+1))
+t2_random = matrix(runif(26*10,0,1),10,26)
+t1_random = t1_random*2*t1_epsilon - t1_epsilon
+t2_random = t2_random*2*t2_epsilon - t2_epsilon
+ini = c(as.vector(t1_random),as.vector(t2_random))
+lambda=1
+costFunction = function(p) {
+  result = NN_cost(train_nl,y,p,lambda=lambda)
+  J = result$cost
+  grad = c(as.vector(result$grad$t1),as.vector(result$grad$t2))
+  grad = as.matrix(grad,length(grad),1)
+  return(list(J=J,grad=grad))
+}
+```
+
+Optimize the model
+```{r,echo=T, eval=F}
+optimization = fmincg(f=costFunction, X=par, Maxiter=500)
+```
+
+At the end, I use $fmincg$ function to do the optimization. Because $fmincg$ function is more efficient than my own gradient decent function. $fmincg$ is one of the optimization function Andrew Ng used in his online course [Machine Learning](https://www.coursera.org/course/ml). This function was original written in Matlab, I rewrite it into R. Here are the R code for $fmincg$ function.
+
+```{r,echo=T, eval=F}
+fmincg = function(f,X, Maxiter=10) {
+  length = Maxiter
+  RHO = 0.01 
+  SIG = 0.5  
+  INT = 0.1  
+  EXT = 3.0  
+  MAX = 20   
+  RATIO = 100
+  red = 1
+  
+  i = 0
+  ls_failed = 0
+  fX = numeric(0)
+  eval = f(X)
+  f1 = eval$J
+  df1 = eval$grad
+  i = i + (length<0)
+  s = -df1
+  d1 = t(-s)%*%s
+  z1 = red/(1-d1)
+  
+  while (i < abs(length)) {
+    i = i + (length>0)
+    X0 = X; f0 = f1; df0 = df1
+    X = X + z1[1]*s
+    eval = f(X)
+    f2 = eval$J
+    df2 = eval$grad
+    i = i + (length<0)
+    d2 = t(df2)%*%s;
+    f3 = f1; d3 = d1; z3 = -z1;
+    if(length>0){M=MAX}else{M=min(MAX,-length-i)}
+    success = 0; limit = -1; 
+    while(1){
+      while(((f2 > f1+z1*RHO*d1) | (d2 > -SIG*d1)) & (M > 0)) {
+        limit = z1
+        if (f2 > f1){
+          z2 = z3 - (0.5*d3*z3*z3)/(d3*z3+f2-f3)
+        } else {
+          A = 6*(f2-f3)/z3+3*(d2+d3)                                
+          B = 3*(f3-f2)-z3*(d3+2*d2)
+          z2 = (sqrt(B*B-A*d2*z3*z3)-B)/A}
+        if (is.na(z2)|is.infinite(z2)){z2 = z3/2}
+        z2 = max(min(z2, INT*z3),(1-INT)*z3)
+        z1 = z1 + z2
+        X = X + z2[1]*s
+        eval = f(X)
+        f2 = eval$J
+        df2 = eval$grad
+        M = M - 1; i = i + (length<0)
+        d2 = t(df2)%*%s
+        z3 = z3 - z2
+      }
+      if (f2 > (f1+z1*RHO*d1) | d2 > -SIG*d1) {
+        break
+      } else if (d2 > SIG*d1) {
+        success = 1; break
+      } else if (M ==0) {
+        break
+      }
+      A = 6*(f2-f3)/z3+3*(d2+d3)
+      B = 3*(f3-f2)-z3*(d3+2*d2)
+      z2 = -d2*z3*z3/(B+sqrt(B*B-A*d2*z3*z3))
+      if (is.na(z2)|is.infinite(z2)|z2<0) {
+        if (limit <-0.5) {
+          z2 = z1*(EXT-1)
+        } else {
+          z2 = (limit-z1)/2
+        }
+      } else if ((limit > -0.5) & ((z2+z1) > limit)){
+        z2 = (limit-z1)/2
+      } else if ((limit < -0.5) & ((z2+z1) > z1*EXT)) {
+        z2 = z1*(EXT-1)
+      } else if (z2 < (-z3*INT)) {
+        z2 = -z3*INT
+      } else if ((limit > -0.5) & (z2 < (limit-z1)*(1.0-INT))) {
+        z2 = (limit - z1)*(1 - INT)
+      }
+      f3 = f2; d3 = d2; z3 = -z2; 
+      z1 = z1 + z2; X = X + z2[1]*s;
+      eval = f(X)
+      f2 = eval$J
+      df2 = eval$grad
+      M = M - 1; i = i + (length<0)
+      d2 = t(df2)%*%s
+    }
+    
+    if (success) {
+      f1 = f2; fX = rbind(fX, f1)
+      print(cat('Iteration  ',i,'| Cost:',f1))
+      temp = (t(df2)%*%df2-t(df1)%*%df2)/(t(df1)%*%df1)
+      s = temp[1]*s - df2
+      tmp = df1; df1 = df2; df2 = tmp;
+      d2 = t(df1)%*%s
+      if (d2>0) {
+        s = -df1
+        d2 = -t(s)%*%s
+      }
+      z1 = z1 * min(RATIO, d1/(d2-2.2251e-308))
+      d1 = d2
+      ls_failed = 0
+    } else {
+      X = X0; f1 = f0; df1 = df0;
+      if (ls_failed|i > abs(length)) {
+        break
+      }
+      tmp = df1; df1 = df2; df2 = tmp;
+      s = -df1
+      d1 = -t(s)%*%s
+      z1 = 1/(1-d1)
+      ls_failed = 1
+    }
+  }
+  return(list(par=X,cost=fX))
+}
+
 ```
 
 
+### Training Result
+
+The result is achieve by training this model with 29400 data in 200000 iteration.
+```{r,echo=T, eval=F}
+first_try = fmincg(f=costFunction, X=ini, Maxiter=200000)
+```
 
 
+$ckeck_accurate$ function is build up to check the accurate of my model ues testing data set and validation data set.
+```{r,echo=T, eval=F}
+check_accurate = function(data, y, t, h_layer=25,lambda,num_labels=10) {
+  fit_model = NN_cost(data,y,init=t,h_layer,lambda=lambda,num_labels)
+  fit_matirx = fit_model$h
+  fit_values = apply(fit_matirx,1,which.max)
+  fit_values = as.vector(fit_values)
+  y = as.vector(y)
+  accurate = sum(fit_values==y)/length(y)
+  result = list(fit = fit_values, acu = accurate)
+  return(result)
+}
+```
 
+The rest of the data is been seperate as test set and validate set
+```{r,echo=T, eval=F}
+test_valid_data = data_all[-train_indx,]
+test_size = floor(0.7*nrow(test_valid_data))
+test_ind = sample(seq_len(nrow(test_valid_data)), size = test_size)
+test_data = test_valid_data[test_ind,]
+valid_data = test_valid_data[-test_ind,]
+```
 
+Setting up the test set and ckeck the accurate.
+```{r,echo=T, eval=F}
+test = test_data[,-1]
+test = data.matrix(test)
+test_y = test_data$label
+test_y = replace(test_y,test_y==0,10)
+test_nl = (test-125)/255
 
+test_accurate = check_accurate(test_nl,test_y,par,lambda=lambda)
+test_accurate$acu
+```
 
-
-
+### Refference
+ - [Stanford University Machine Learning online course](https://www.coursera.org/course/ml)
+ - The Elements of Statistical Learning, Data Mining, Inference, and Prediction
+ - Machine Learning An Algorithmic Perspective
+ - Neural Networks and Statistical Learning
+ 
+ 
+ 
 [101]:tikz12.png "NN"
