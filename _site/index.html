@@ -77,100 +77,7 @@ MathJax.Hub.Config({
 	<p><h3 id="intorduction">Intorduction</h3>
 <p>This algorithm is for a <a href="https://www.kaggle.com/c/digit-recognizer">kaggle competition</a> to take an image of a handwritten single digit, and determine what that digit is. The data used is <a href="https://www.kaggle.com/c/digit-recognizer/data">MNIST data</a>.     </p>
 
-<p>The trainning data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels in total.  </p>
-
-<p>Here is the data for handwritten 1:</p>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r">sample_data <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;train.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>nrows<span class="o">=</span><span class="m">10</span><span class="p">)</span>
-<span class="kt">matrix</span><span class="p">(</span>sample_data<span class="p">[</span><span class="m">1</span><span class="p">,</span><span class="m">-1</span><span class="p">],</span><span class="m">28</span><span class="p">,</span><span class="m">28</span><span class="p">)</span></code></pre></div>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">##       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
-##  [1,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [2,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [3,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [4,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [5,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [6,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [7,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [8,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##  [9,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [10,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [11,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [12,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [13,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [14,] 0    0    0    0    0    0    0    0    0    0     0     23   
-## [15,] 0    0    0    0    0    0    0    0    0    0     93    210  
-## [16,] 0    0    0    0    0    0    0    0    0    54    254   254  
-## [17,] 0    0    0    0    0    0    0    0    29   209   253   253  
-## [18,] 0    0    0    0    0    0    0    80   207  253   238   159  
-## [19,] 0    0    0    0    0    0    123  247  253  253   170   0    
-## [20,] 0    0    0    0    0    191  248  253  235  88    17    0    
-## [21,] 0    0    0    0    188  250  253  208  77   0     0     0    
-## [22,] 0    0    0    0    255  253  167  13   0    0     0     0    
-## [23,] 0    0    0    0    94   93   10   0    0    0     0     0    
-## [24,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [25,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [26,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [27,] 0    0    0    0    0    0    0    0    0    0     0     0    
-## [28,] 0    0    0    0    0    0    0    0    0    0     0     0    
-##       [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22]
-##  [1,] 0     0     0     0     0     0     0     0     0     0    
-##  [2,] 0     0     0     0     0     0     0     0     0     0    
-##  [3,] 0     0     0     0     0     0     0     0     0     0    
-##  [4,] 0     0     0     0     0     0     0     0     0     0    
-##  [5,] 0     0     0     0     0     0     0     0     0     0    
-##  [6,] 0     0     0     0     0     0     0     0     0     0    
-##  [7,] 0     0     0     0     0     0     0     0     0     0    
-##  [8,] 0     0     0     0     0     0     0     0     15    94   
-##  [9,] 0     0     0     0     0     0     0     89    220   253  
-## [10,] 0     0     0     0     0     22    103   240   253   253  
-## [11,] 0     0     0     0     20    188   253   253   253   253  
-## [12,] 0     0     20    168   203   253   253   195   80    94   
-## [13,] 16    27    206   253   253   245   191   25    0     0    
-## [14,] 209   253   254   253   248   93    0     0     0     0    
-## [15,] 253   253   254   196   76    0     0     0     0     0    
-## [16,] 254   254   198   7     0     0     0     0     0     0    
-## [17,] 240   13    7     0     0     0     0     0     0     0    
-## [18,] 81    0     0     0     0     0     0     0     0     0    
-## [19,] 0     0     0     0     0     0     0     0     0     0    
-## [20,] 0     0     0     0     0     0     0     0     0     0    
-## [21,] 0     0     0     0     0     0     0     0     0     0    
-## [22,] 0     0     0     0     0     0     0     0     0     0    
-## [23,] 0     0     0     0     0     0     0     0     0     0    
-## [24,] 0     0     0     0     0     0     0     0     0     0    
-## [25,] 0     0     0     0     0     0     0     0     0     0    
-## [26,] 0     0     0     0     0     0     0     0     0     0    
-## [27,] 0     0     0     0     0     0     0     0     0     0    
-## [28,] 0     0     0     0     0     0     0     0     0     0    
-##       [,23] [,24] [,25] [,26] [,27] [,28]
-##  [1,] 0     0     0     0     0     0    
-##  [2,] 0     0     0     0     0     0    
-##  [3,] 0     0     0     0     0     0    
-##  [4,] 0     0     0     0     0     0    
-##  [5,] 0     0     0     0     0     0    
-##  [6,] 0     0     0     0     0     0    
-##  [7,] 0     0     0     0     0     0    
-##  [8,] 89    0     0     0     0     0    
-##  [9,] 251   214   0     0     0     0    
-## [10,] 253   218   0     0     0     0    
-## [11,] 250   95    0     0     0     0    
-## [12,] 131   0     0     0     0     0    
-## [13,] 0     0     0     0     0     0    
-## [14,] 0     0     0     0     0     0    
-## [15,] 0     0     0     0     0     0    
-## [16,] 0     0     0     0     0     0    
-## [17,] 0     0     0     0     0     0    
-## [18,] 0     0     0     0     0     0    
-## [19,] 0     0     0     0     0     0    
-## [20,] 0     0     0     0     0     0    
-## [21,] 0     0     0     0     0     0    
-## [22,] 0     0     0     0     0     0    
-## [23,] 0     0     0     0     0     0    
-## [24,] 0     0     0     0     0     0    
-## [25,] 0     0     0     0     0     0    
-## [26,] 0     0     0     0     0     0    
-## [27,] 0     0     0     0     0     0    
-## [28,] 0     0     0     0     0     0</code></pre></div>
+<p>The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  </p>
 
 <p>Let’s visualize some sample data:     </p>
 
@@ -192,138 +99,320 @@ sample_plot <span class="o">=</span> <span class="kr">function</span><span class
     image<span class="p">(</span>z<span class="o">=</span>xx<span class="p">[[</span>i<span class="p">]],</span> col<span class="o">=</span>gray.colors<span class="p">(</span><span class="m">12</span><span class="p">),</span>xaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>yaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>ann<span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
   <span class="p">}}</span>
 
-sample_p <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;train.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>nrows<span class="o">=</span><span class="m">100</span><span class="p">)</span>
+sample_p <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;sample.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">)[,</span><span class="m">-1</span><span class="p">]</span>
 sample_p <span class="o">=</span> sample_p<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
-sample_plot<span class="p">(</span>sample_p<span class="p">,</span><span class="m">64</span><span class="p">)</span></code></pre></div>
+sample_plot<span class="p">(</span>sample_p<span class="p">,</span><span class="m">16</span><span class="p">)</span></code></pre></div>
 
-<p><img src="/figure/source/2014-12-2-NN/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /> </p>
+<p><img src="/figure/source/2014-12-2-NN/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /> </p>
 
 <h3 id="neural-network-algorithm">Neural Network Algorithm</h3>
 
-<p>The General Neural Newwork model shows below:</p>
+<h4 id="forward-propagation">Forward Propagation</h4>
+
+<p>The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.</p>
 
 <script type="math/tex; mode=display">
-z^{(l+1)} = a^{(l)}(\Theta^{(l)})^T 
+a^{(1)} = \Theta^{(1)}_0+X^{(0)}(\Theta^{(1)})^T
 </script>
 
 <script type="math/tex; mode=display">
-a^{(l+1)} = f_{\theta}(z^{(l+1)}) 
+z^{(1)} = f_{\theta}(a^{(1)})
 </script>
 
-<p>Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):
-<img src="tikz12.png" alt="NN graph" title="NN" /></p>
+<script type="math/tex; mode=display">
+a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
+</script>
+
+<script type="math/tex; mode=display">
+\hat{Y} = f_{\theta}(a^{(2)})
+</script>
+
+<p>Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):</p>
+
+<p><img src="/figure/source/2014-12-2-NN/tikz12.png" alt="NN graph" /> </p>
+
+<h4 id="cost-function">Cost Function</h4>
 
 <p>For classification problem, we use Cross-entropy cost function:    </p>
 
 <script type="math/tex; mode=display">
-J(\Theta)= -\frac{1}{m}  \left[  \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}  
-  + (1-y^{(i)}_k ) log( 1- f_\theta (z^{(i)})_{k} )  \right]     
+J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}  
+  + (1-y^{(i)}_k ) log( 1- f_\theta (a^{(i)})_{k} )  \right]     
 </script>
 
 <p>or the simple version:</p>
 
 <script type="math/tex; mode=display">
-J(\Theta)= -\frac{1}{m} \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}      
+J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
 </script>
 
-<p>From the cost function $J(\Theta)$, we have derivatives:</p>
+<h4 id="back-propagation">Back Propagation</h4>
+
+<p>From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:</p>
 
 <script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  \frac{f_{\theta}(z^{(l+1)})}{\partial z^{(l+1)}} \frac{\partial z^{(l+1)}}{\partial \Theta^{(l)}}
+\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}}
 </script>
 
 <script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(l)}} =  (y-f_{\theta}(z^{(l+1)}))^Ta^{l}
+\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  (y-f_{\theta}(a^{(2)}))^Tz^{(1)}
 </script>
 
-<p>Here is the R code for the neural network. This model include two hidden layers with 25 units in first hidden layer 16 units in second hidden layer. I  minimize $J(\Theta)$ by gradient descent, called back-propagation in the setting.    </p>
+<script type="math/tex; mode=display">
+\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial \Theta^{(1)}}
+</script>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">a1 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>data<span class="p">)</span>
+<script type="math/tex; mode=display">
+\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} = \frac{\partial J(\Theta)}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} X^{(0)}
+</script>
+
+<p>Here is the R code for the neural network. This model include 25 units in the hidden layer. $J(\Theta)$ can be minimize by gradient descent, called back-propagation in the setting.    </p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">NN_cost <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span> y<span class="p">,</span> init<span class="p">,</span> h_layer<span class="o">=</span><span class="m">25</span><span class="p">,</span> lambda<span class="o">=</span><span class="m">0</span><span class="p">,</span> num_labels<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+  
+  m <span class="o">=</span> <span class="kp">nrow</span><span class="p">(</span>data<span class="p">)</span>
+  <span class="c1"># reshape Theta1 and Theta2</span>
+  in_layer <span class="o">=</span> <span class="kp">ncol</span><span class="p">(</span>data<span class="p">)</span>
+  par_t1 <span class="o">=</span> init<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="p">((</span>in_layer<span class="m">+1</span><span class="p">)</span><span class="o">*</span>h_layer<span class="p">))]</span>
+
+  par_t2 <span class="o">=</span> init<span class="p">[</span><span class="kt">c</span><span class="p">(((</span>in_layer<span class="m">+1</span><span class="p">)</span><span class="o">*</span>h_layer<span class="m">+1</span><span class="p">)</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>init<span class="p">))]</span>
+  Theta1 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>par_t1<span class="p">,</span>h_layer<span class="p">,</span>in_layer<span class="m">+1</span><span class="p">)</span>
+  Theta2 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>par_t2<span class="p">,</span>num_labels<span class="p">,</span>h_layer<span class="m">+1</span><span class="p">)</span>
+  
+  
+  a1 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>data<span class="p">)</span>
   z2 <span class="o">=</span> a1<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>Theta1<span class="p">)</span>
-  a2 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>sigmoid<span class="p">(</span>z2<span class="p">))</span> <span class="c1">#add the bias term</span>
+  a2 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>sigmoid<span class="p">(</span>z2<span class="p">))</span>
   z3 <span class="o">=</span> a2<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>Theta2<span class="p">)</span>
-  a3 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>sigmoid<span class="p">(</span>z3<span class="p">))</span> <span class="c1">#add the bias term</span>
-  z4 <span class="o">=</span> a3<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>Theta3<span class="p">)</span>
-  h <span class="o">=</span> sigmoid<span class="p">(</span>z4<span class="p">)</span>
-  <span class="c1"># reshape the y</span>
+  h <span class="o">=</span> sigmoid<span class="p">(</span>z3<span class="p">)</span>
+  
   ny <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="kp">length</span><span class="p">(</span>y<span class="p">),</span>num_labels<span class="p">)</span>
   <span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>y<span class="p">)){</span>
-    ny<span class="p">[</span>i<span class="p">,</span>y<span class="p">[</span>i<span class="p">]]</span> <span class="o">=</span> <span class="m">1</span><span class="p">}</span>
+    ny<span class="p">[</span>i<span class="p">,</span>y<span class="p">[</span>i<span class="p">]]</span> <span class="o">=</span> <span class="m">1</span>
+  <span class="p">}</span>
   
-  <span class="c1"># cost function</span>
-  regu <span class="o">=</span> lambda<span class="o">*</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>Theta1<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="o">+</span> <span class="kp">sum</span><span class="p">(</span>Theta2<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="o">+</span> <span class="kp">sum</span><span class="p">(</span>Theta3<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span>m<span class="p">)</span>
+  regu <span class="o">=</span> lambda<span class="o">*</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>Theta1<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">+</span><span class="kp">sum</span><span class="p">(</span>Theta2<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span>m<span class="p">)</span>
   cost <span class="o">=</span> <span class="o">-</span><span class="kp">sum</span><span class="p">(</span>ny<span class="o">*</span><span class="kp">log</span><span class="p">(</span>h<span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>ny<span class="p">)</span><span class="o">*</span><span class="kp">log</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>h<span class="p">))</span><span class="o">/</span>m<span class="o">+</span>regu
-
-  <span class="c1"># back propagation</span>
-  delta4 <span class="o">=</span> h<span class="o">-</span>ny
-  delta3 <span class="o">=</span> <span class="p">(</span>delta4<span class="o">%*%</span>Theta3<span class="p">[,</span><span class="m">-1</span><span class="p">])</span><span class="o">*</span>sigmoidGradient<span class="p">(</span>z3<span class="p">)</span>
+  
+  delta3 <span class="o">=</span> h<span class="o">-</span>ny
   delta2 <span class="o">=</span> <span class="p">(</span>delta3<span class="o">%*%</span>Theta2<span class="p">[,</span><span class="m">-1</span><span class="p">])</span><span class="o">*</span>sigmoidGradient<span class="p">(</span>z2<span class="p">)</span>
-  <span class="c1"># add the bias term</span>
+  
   thres1 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>Theta1<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>Theta1<span class="p">))</span>
   thres1<span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
   thres2 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>Theta2<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>Theta2<span class="p">))</span>
   thres2<span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
-  thres3 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>Theta3<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>Theta3<span class="p">))</span>
+  
   Theta1_grad <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>delta2<span class="p">)</span><span class="o">%*%</span>a1<span class="p">)</span><span class="o">/</span>m <span class="o">+</span> thres1<span class="o">*</span>Theta1<span class="o">*</span>lambda<span class="o">/</span>m
   Theta2_grad <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>delta3<span class="p">)</span><span class="o">%*%</span>a2<span class="p">)</span><span class="o">/</span>m <span class="o">+</span> thres2<span class="o">*</span>Theta2<span class="o">*</span>lambda<span class="o">/</span>m
-  Theta3_grad <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>delta4<span class="p">)</span><span class="o">%*%</span>a3<span class="p">)</span><span class="o">/</span>m <span class="o">+</span> thres3<span class="o">*</span>Theta3<span class="o">*</span>lambda<span class="o">/</span>m</code></pre></div>
+  
+  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>cost<span class="o">=</span>cost<span class="p">,</span>h<span class="o">=</span>h<span class="p">,</span>grad<span class="o">=</span><span class="kt">list</span><span class="p">(</span>t1<span class="o">=</span>Theta1_grad<span class="p">,</span>t2<span class="o">=</span>Theta2_grad<span class="p">))</span>
+  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+<span class="p">}</span></code></pre></div>
 
-</p>
-      </li>
+<h3 id="train-the-model">Train The Model</h3>
+
+<p>First, we randomly select 70% of data as training data set.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">data_all <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;train.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+train_size <span class="o">=</span> <span class="kp">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>data_all<span class="p">))</span>
+train_indx <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">seq_len</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>data_all<span class="p">)),</span> size <span class="o">=</span> train_size<span class="p">)</span></code></pre></div>
+
+<p>Preprocess and normalize data.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">data <span class="o">=</span> data_all<span class="p">[</span>train_indx<span class="p">,]</span>
+train <span class="o">=</span> data<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
+train <span class="o">=</span> <span class="kp">data.matrix</span><span class="p">(</span>train<span class="p">)</span>
+y <span class="o">=</span> data<span class="o">$</span>label
+y<span class="o">=</span><span class="kp">replace</span><span class="p">(</span>y<span class="p">,</span>y<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
+train_nl <span class="o">=</span> <span class="p">(</span>train<span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span></code></pre></div>
+
+<p>Build up the initial value and training variables.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">h_layer<span class="o">=</span><span class="m">25</span>
+t1_epsilon <span class="o">=</span> <span class="kp">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="kp">sqrt</span><span class="p">(</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="o">+</span>h_layer<span class="p">)</span>
+t2_epsilon <span class="o">=</span> <span class="kp">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="kp">sqrt</span><span class="p">(</span>h_layer<span class="m">+10</span><span class="p">)</span>
+t1_random <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>runif<span class="p">((</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="m">+1</span><span class="p">)</span><span class="o">*</span><span class="m">25</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">25</span><span class="p">,(</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="m">+1</span><span class="p">))</span>
+t2_random <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>runif<span class="p">(</span><span class="m">26</span><span class="o">*</span><span class="m">10</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">10</span><span class="p">,</span><span class="m">26</span><span class="p">)</span>
+t1_random <span class="o">=</span> t1_random<span class="o">*</span><span class="m">2</span><span class="o">*</span>t1_epsilon <span class="o">-</span> t1_epsilon
+t2_random <span class="o">=</span> t2_random<span class="o">*</span><span class="m">2</span><span class="o">*</span>t2_epsilon <span class="o">-</span> t2_epsilon
+ini <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kp">as.vector</span><span class="p">(</span>t1_random<span class="p">),</span><span class="kp">as.vector</span><span class="p">(</span>t2_random<span class="p">))</span>
+lambda<span class="o">=</span><span class="m">1</span>
+costFunction <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>p<span class="p">)</span> <span class="p">{</span>
+  result <span class="o">=</span> NN_cost<span class="p">(</span>train_nl<span class="p">,</span>y<span class="p">,</span>p<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">)</span>
+  J <span class="o">=</span> result<span class="o">$</span>cost
+  grad <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kp">as.vector</span><span class="p">(</span>result<span class="o">$</span>grad<span class="o">$</span>t1<span class="p">),</span><span class="kp">as.vector</span><span class="p">(</span>result<span class="o">$</span>grad<span class="o">$</span>t2<span class="p">))</span>
+  grad <span class="o">=</span> <span class="kp">as.matrix</span><span class="p">(</span>grad<span class="p">,</span><span class="kp">length</span><span class="p">(</span>grad<span class="p">),</span><span class="m">1</span><span class="p">)</span>
+  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>J<span class="o">=</span>J<span class="p">,</span>grad<span class="o">=</span>grad<span class="p">))</span>
+<span class="p">}</span></code></pre></div>
+
+<p>Optimize the model</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">optimization <span class="o">=</span> fmincg<span class="p">(</span>f<span class="o">=</span>costFunction<span class="p">,</span> X<span class="o">=</span>par<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">500</span><span class="p">)</span></code></pre></div>
+
+<p>At the end, I use $fmincg$ function to do the optimization. Because $fmincg$ function is more efficient than my own gradient decent function. $fmincg$ is one of the optimization function Andrew Ng used in his online course <a href="https://www.coursera.org/course/ml">Machine Learning</a>. This function was original written in Matlab, I rewrite it into R. Here are the R code for $fmincg$ function.</p>
+
+<div class="highlight"><pre><code class="language-r" data-lang="r">fmincg <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>f<span class="p">,</span>X<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+  length <span class="o">=</span> Maxiter
+  RHO <span class="o">=</span> <span class="m">0.01</span> 
+  SIG <span class="o">=</span> <span class="m">0.5</span>  
+  INT <span class="o">=</span> <span class="m">0.1</span>  
+  EXT <span class="o">=</span> <span class="m">3.0</span>  
+  MAX <span class="o">=</span> <span class="m">20</span>   
+  RATIO <span class="o">=</span> <span class="m">100</span>
+  red <span class="o">=</span> <span class="m">1</span>
+  
+  i <span class="o">=</span> <span class="m">0</span>
+  ls_failed <span class="o">=</span> <span class="m">0</span>
+  fX <span class="o">=</span> <span class="kt">numeric</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+  eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
+  f1 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
+  df1 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
+  i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+  s <span class="o">=</span> <span class="o">-</span>df1
+  d1 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span><span class="o">-</span>s<span class="p">)</span><span class="o">%*%</span>s
+  z1 <span class="o">=</span> red<span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>d1<span class="p">)</span>
+  
+  <span class="kr">while</span> <span class="p">(</span>i <span class="o">&lt;</span> <span class="kp">abs</span><span class="p">(</span><span class="kp">length</span><span class="p">))</span> <span class="p">{</span>
+    i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">)</span>
+    X0 <span class="o">=</span> X<span class="p">;</span> f0 <span class="o">=</span> f1<span class="p">;</span> df0 <span class="o">=</span> df1
+    X <span class="o">=</span> X <span class="o">+</span> z1<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s
+    eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
+    f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
+    df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
+    i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+    d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s<span class="p">;</span>
+    f3 <span class="o">=</span> f1<span class="p">;</span> d3 <span class="o">=</span> d1<span class="p">;</span> z3 <span class="o">=</span> <span class="o">-</span>z1<span class="p">;</span>
+    <span class="kr">if</span><span class="p">(</span><span class="kp">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">){</span>M<span class="o">=</span>MAX<span class="p">}</span><span class="kp">else</span><span class="p">{</span>M<span class="o">=</span><span class="kp">min</span><span class="p">(</span>MAX<span class="p">,</span><span class="o">-</span><span class="kp">length</span><span class="o">-</span>i<span class="p">)}</span>
+    success <span class="o">=</span> <span class="m">0</span><span class="p">;</span> limit <span class="o">=</span> <span class="m">-1</span><span class="p">;</span> 
+    <span class="kr">while</span><span class="p">(</span><span class="m">1</span><span class="p">){</span>
+      <span class="kr">while</span><span class="p">(((</span>f2 <span class="o">&gt;</span> f1<span class="o">+</span>z1<span class="o">*</span>RHO<span class="o">*</span>d1<span class="p">)</span> <span class="o">|</span> <span class="p">(</span>d2 <span class="o">&gt;</span> <span class="o">-</span>SIG<span class="o">*</span>d1<span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span>M <span class="o">&gt;</span> <span class="m">0</span><span class="p">))</span> <span class="p">{</span>
+        limit <span class="o">=</span> z1
+        <span class="kr">if</span> <span class="p">(</span>f2 <span class="o">&gt;</span> f1<span class="p">){</span>
+          z2 <span class="o">=</span> z3 <span class="o">-</span> <span class="p">(</span><span class="m">0.5</span><span class="o">*</span>d3<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">)</span><span class="o">/</span><span class="p">(</span>d3<span class="o">*</span>z3<span class="o">+</span>f2<span class="o">-</span>f3<span class="p">)</span>
+        <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
+          A <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span>f2<span class="o">-</span>f3<span class="p">)</span><span class="o">/</span>z3<span class="m">+3</span><span class="o">*</span><span class="p">(</span>d2<span class="o">+</span>d3<span class="p">)</span>                                
+          B <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span>f3<span class="o">-</span>f2<span class="p">)</span><span class="o">-</span>z3<span class="o">*</span><span class="p">(</span>d3<span class="m">+2</span><span class="o">*</span>d2<span class="p">)</span>
+          z2 <span class="o">=</span> <span class="p">(</span><span class="kp">sqrt</span><span class="p">(</span>B<span class="o">*</span>B<span class="o">-</span>A<span class="o">*</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">)</span><span class="o">-</span>B<span class="p">)</span><span class="o">/</span>A<span class="p">}</span>
+        <span class="kr">if</span> <span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span><span class="kp">is.infinite</span><span class="p">(</span>z2<span class="p">)){</span>z2 <span class="o">=</span> z3<span class="o">/</span><span class="m">2</span><span class="p">}</span>
+        z2 <span class="o">=</span> <span class="kp">max</span><span class="p">(</span><span class="kp">min</span><span class="p">(</span>z2<span class="p">,</span> INT<span class="o">*</span>z3<span class="p">),(</span><span class="m">1</span><span class="o">-</span>INT<span class="p">)</span><span class="o">*</span>z3<span class="p">)</span>
+        z1 <span class="o">=</span> z1 <span class="o">+</span> z2
+        X <span class="o">=</span> X <span class="o">+</span> z2<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s
+        eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
+        f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
+        df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
+        M <span class="o">=</span> M <span class="o">-</span> <span class="m">1</span><span class="p">;</span> i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+        d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s
+        z3 <span class="o">=</span> z3 <span class="o">-</span> z2
+      <span class="p">}</span>
+      <span class="kr">if</span> <span class="p">(</span>f2 <span class="o">&gt;</span> <span class="p">(</span>f1<span class="o">+</span>z1<span class="o">*</span>RHO<span class="o">*</span>d1<span class="p">)</span> <span class="o">|</span> d2 <span class="o">&gt;</span> <span class="o">-</span>SIG<span class="o">*</span>d1<span class="p">)</span> <span class="p">{</span>
+        <span class="kr">break</span>
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>d2 <span class="o">&gt;</span> SIG<span class="o">*</span>d1<span class="p">)</span> <span class="p">{</span>
+        success <span class="o">=</span> <span class="m">1</span><span class="p">;</span> <span class="kr">break</span>
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>M <span class="o">==</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">break</span>
+      <span class="p">}</span>
+      A <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span>f2<span class="o">-</span>f3<span class="p">)</span><span class="o">/</span>z3<span class="m">+3</span><span class="o">*</span><span class="p">(</span>d2<span class="o">+</span>d3<span class="p">)</span>
+      B <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span>f3<span class="o">-</span>f2<span class="p">)</span><span class="o">-</span>z3<span class="o">*</span><span class="p">(</span>d3<span class="m">+2</span><span class="o">*</span>d2<span class="p">)</span>
+      z2 <span class="o">=</span> <span class="o">-</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="o">/</span><span class="p">(</span>B<span class="o">+</span><span class="kp">sqrt</span><span class="p">(</span>B<span class="o">*</span>B<span class="o">-</span>A<span class="o">*</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">))</span>
+      <span class="kr">if</span> <span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span><span class="kp">is.infinite</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span>z2<span class="o">&lt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">if</span> <span class="p">(</span>limit <span class="o">&lt;-</span><span class="m">0.5</span><span class="p">)</span> <span class="p">{</span>
+          z2 <span class="o">=</span> z1<span class="o">*</span><span class="p">(</span>EXT<span class="m">-1</span><span class="p">)</span>
+        <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
+          z2 <span class="o">=</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">/</span><span class="m">2</span>
+        <span class="p">}</span>
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span>z2<span class="o">+</span>z1<span class="p">)</span> <span class="o">&gt;</span> limit<span class="p">)){</span>
+        z2 <span class="o">=</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">/</span><span class="m">2</span>
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&lt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span>z2<span class="o">+</span>z1<span class="p">)</span> <span class="o">&gt;</span> z1<span class="o">*</span>EXT<span class="p">))</span> <span class="p">{</span>
+        z2 <span class="o">=</span> z1<span class="o">*</span><span class="p">(</span>EXT<span class="m">-1</span><span class="p">)</span>
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>z2 <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span>z3<span class="o">*</span>INT<span class="p">))</span> <span class="p">{</span>
+        z2 <span class="o">=</span> <span class="o">-</span>z3<span class="o">*</span>INT
+      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>z2 <span class="o">&lt;</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1.0</span><span class="o">-</span>INT<span class="p">)))</span> <span class="p">{</span>
+        z2 <span class="o">=</span> <span class="p">(</span>limit <span class="o">-</span> z1<span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1</span> <span class="o">-</span> INT<span class="p">)</span>
+      <span class="p">}</span>
+      f3 <span class="o">=</span> f2<span class="p">;</span> d3 <span class="o">=</span> d2<span class="p">;</span> z3 <span class="o">=</span> <span class="o">-</span>z2<span class="p">;</span> 
+      z1 <span class="o">=</span> z1 <span class="o">+</span> z2<span class="p">;</span> X <span class="o">=</span> X <span class="o">+</span> z2<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s<span class="p">;</span>
+      eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
+      f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
+      df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
+      M <span class="o">=</span> M <span class="o">-</span> <span class="m">1</span><span class="p">;</span> i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+      d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s
+    <span class="p">}</span>
     
-      <li>
-        <span class="post-meta">Nov 25, 2014</span>
+    <span class="kr">if</span> <span class="p">(</span>success<span class="p">)</span> <span class="p">{</span>
+      f1 <span class="o">=</span> f2<span class="p">;</span> fX <span class="o">=</span> <span class="kp">rbind</span><span class="p">(</span>fX<span class="p">,</span> f1<span class="p">)</span>
+      <span class="kp">print</span><span class="p">(</span><span class="kp">cat</span><span class="p">(</span><span class="s">&#39;Iteration  &#39;</span><span class="p">,</span>i<span class="p">,</span><span class="s">&#39;| Cost:&#39;</span><span class="p">,</span>f1<span class="p">))</span>
+      temp <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>df2<span class="o">-</span><span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>df2<span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>df1<span class="p">)</span>
+      s <span class="o">=</span> temp<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s <span class="o">-</span> df2
+      tmp <span class="o">=</span> df1<span class="p">;</span> df1 <span class="o">=</span> df2<span class="p">;</span> df2 <span class="o">=</span> tmp<span class="p">;</span>
+      d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>s
+      <span class="kr">if</span> <span class="p">(</span>d2<span class="o">&gt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        s <span class="o">=</span> <span class="o">-</span>df1
+        d2 <span class="o">=</span> <span class="o">-</span><span class="kp">t</span><span class="p">(</span>s<span class="p">)</span><span class="o">%*%</span>s
+      <span class="p">}</span>
+      z1 <span class="o">=</span> z1 <span class="o">*</span> <span class="kp">min</span><span class="p">(</span>RATIO<span class="p">,</span> d1<span class="o">/</span><span class="p">(</span>d2<span class="m">-2.2251e-308</span><span class="p">))</span>
+      d1 <span class="o">=</span> d2
+      ls_failed <span class="o">=</span> <span class="m">0</span>
+    <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
+      X <span class="o">=</span> X0<span class="p">;</span> f1 <span class="o">=</span> f0<span class="p">;</span> df1 <span class="o">=</span> df0<span class="p">;</span>
+      <span class="kr">if</span> <span class="p">(</span>ls_failed<span class="o">|</span>i <span class="o">&gt;</span> <span class="kp">abs</span><span class="p">(</span><span class="kp">length</span><span class="p">))</span> <span class="p">{</span>
+        <span class="kr">break</span>
+      <span class="p">}</span>
+      tmp <span class="o">=</span> df1<span class="p">;</span> df1 <span class="o">=</span> df2<span class="p">;</span> df2 <span class="o">=</span> tmp<span class="p">;</span>
+      s <span class="o">=</span> <span class="o">-</span>df1
+      d1 <span class="o">=</span> <span class="o">-</span><span class="kp">t</span><span class="p">(</span>s<span class="p">)</span><span class="o">%*%</span>s
+      z1 <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>d1<span class="p">)</span>
+      ls_failed <span class="o">=</span> <span class="m">1</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>par<span class="o">=</span>X<span class="p">,</span>cost<span class="o">=</span>fX<span class="p">))</span>
+<span class="p">}</span></code></pre></div>
 
-        <h2>
-          <a class="post-link" href="/2014/11/test.html">Test</a>
-        </h2>
-	<p><p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com">http://rmarkdown.rstudio.com</a>.</p>
+<h3 id="training-result">Training Result</h3>
 
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<p>The result is achieve by training this model with 29400 data in 200000 iteration.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">summary</span><span class="p">(</span>cars<span class="p">)</span></code></pre></div>
+<div class="highlight"><pre><code class="language-r" data-lang="r">first_try <span class="o">=</span> fmincg<span class="p">(</span>f<span class="o">=</span>costFunction<span class="p">,</span> X<span class="o">=</span>ini<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">200000</span><span class="p">)</span></code></pre></div>
 
-<div class="highlight"><pre><code class="language-text" data-lang="text">##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre></div>
+<p>$ckeck_accurate$ function is build up to check the accurate of my model ues testing data set and validation data set.</p>
 
-<p>You can also embed plots, for example:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r">check_accurate <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span> y<span class="p">,</span> <span class="kp">t</span><span class="p">,</span> h_layer<span class="o">=</span><span class="m">25</span><span class="p">,</span>lambda<span class="p">,</span>num_labels<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+  fit_model <span class="o">=</span> NN_cost<span class="p">(</span>data<span class="p">,</span>y<span class="p">,</span>init<span class="o">=</span><span class="kp">t</span><span class="p">,</span>h_layer<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">,</span>num_labels<span class="p">)</span>
+  fit_matirx <span class="o">=</span> fit_model<span class="o">$</span>h
+  fit_values <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>fit_matirx<span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="kp">which.max</span><span class="p">)</span>
+  fit_values <span class="o">=</span> <span class="kp">as.vector</span><span class="p">(</span>fit_values<span class="p">)</span>
+  y <span class="o">=</span> <span class="kp">as.vector</span><span class="p">(</span>y<span class="p">)</span>
+  accurate <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>fit_values<span class="o">==</span>y<span class="p">)</span><span class="o">/</span><span class="kp">length</span><span class="p">(</span>y<span class="p">)</span>
+  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>fit <span class="o">=</span> fit_values<span class="p">,</span> acu <span class="o">=</span> accurate<span class="p">)</span>
+  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+<span class="p">}</span></code></pre></div>
 
-<p><img src="/figure/source/2014-11-25-test/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /> </p>
+<p>The rest of the data is been seperate as test set and validate set</p>
 
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
-</p>
-      </li>
-    
-      <li>
-        <span class="post-meta">Nov 25, 2014</span>
+<div class="highlight"><pre><code class="language-r" data-lang="r">test_valid_data <span class="o">=</span> data_all<span class="p">[</span><span class="o">-</span>train_indx<span class="p">,]</span>
+test_size <span class="o">=</span> <span class="kp">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>test_valid_data<span class="p">))</span>
+test_ind <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">seq_len</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>test_valid_data<span class="p">)),</span> size <span class="o">=</span> test_size<span class="p">)</span>
+test_data <span class="o">=</span> test_valid_data<span class="p">[</span>test_ind<span class="p">,]</span>
+valid_data <span class="o">=</span> test_valid_data<span class="p">[</span><span class="o">-</span>test_ind<span class="p">,]</span></code></pre></div>
 
-        <h2>
-          <a class="post-link" href="/2014/11/one-more-test.html">one more test</a>
-        </h2>
-	<p><p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com">http://rmarkdown.rstudio.com</a>.</p>
+<p>Setting up the test set and ckeck the accurate.</p>
 
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
+<div class="highlight"><pre><code class="language-r" data-lang="r">test <span class="o">=</span> test_data<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
+test <span class="o">=</span> <span class="kp">data.matrix</span><span class="p">(</span>test<span class="p">)</span>
+test_y <span class="o">=</span> test_data<span class="o">$</span>label
+test_y <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>test_y<span class="p">,</span>test_y<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
+test_nl <span class="o">=</span> <span class="p">(</span>test<span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">summary</span><span class="p">(</span>cars<span class="p">)</span></code></pre></div>
+test_accurate <span class="o">=</span> check_accurate<span class="p">(</span>test_nl<span class="p">,</span>test_y<span class="p">,</span>par<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">)</span>
+test_accurate<span class="o">$</span>acu</code></pre></div>
 
-<div class="highlight"><pre><code class="language-text" data-lang="text">##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre></div>
+<h3 id="refference">Refference</h3>
+<ul>
+  <li><a href="https://www.coursera.org/course/ml">Stanford University Machine Learning online course</a></li>
+  <li>The Elements of Statistical Learning, Data Mining, Inference, and Prediction</li>
+  <li>Machine Learning An Algorithmic Perspective</li>
+  <li>Neural Networks and Statistical Learning</li>
+</ul>
 
-<p>You can also embed plots, for example:</p>
-
-<p><img src="/figure/source/2014-11-25-one-more-test/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /> </p>
-
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
 </p>
       </li>
     
@@ -347,221 +436,6 @@ J(\Theta)= -\frac{1}{m} \sum^m_i \sum^K_k y^{(i)}_{k}log f_\theta (z^{(i)})_{k}
 
 <p>Check out the <a href="http://jekyllrb.com">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://github.com/jekyll/jekyll-help">Jekyll’s dedicated Help repository</a>.</p>
 
-</p>
-      </li>
-    
-      <li>
-        <span class="post-meta">Sep 28, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/09/jekyll-with-knitr.html">Serve Jekyll Websites with servr and knitr</a>
-        </h2>
-	<p><p>The R package <a href="https://github.com/yihui/servr"><strong>servr</strong></a> can be used to set up an HTTP server to serve files under a directory. Since <strong>servr</strong> v0.2, it has added a function <code>servr::jekyll()</code> specifically designed for websites based on Jekyll and R Markdown. The main features of this function are:</p>
-
-<ol>
-  <li>R Markdown source files are re-compiled through <a href="http://yihui.name/knitr"><strong>knitr</strong></a> when their corresponding Markdown output files become older<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> than source files;</li>
-  <li>The web page will refresh itself automatically in the above case as well;</li>
-</ol>
-
-<p>As a result, all you need to do is write your blog posts (R Markdown documents), and you do not need to worry about re-building the website or calling <strong>knitr</strong> commands. Whenever you save a blog post in your text editor, the web page will be updated on the fly. This is particularly handy in the <a href="http://www.rstudio.com">RStudio IDE</a>, because after you run <code>servr::jekyll()</code> in the console, you can start writing or editing your R Markdown posts, and the HTML output, displayed in the RStudio viewer pane, will be in sync with your source post in the source panel (see the screenshot below).</p>
-
-<p><a href="http://i.imgur.com/gKVGhiP.png"><img src="http://i.imgur.com/gKVGhiP.png" alt="Jekyll with servr and knitr" /></a></p>
-
-<h2 id="prerequisites">Prerequisites</h2>
-
-<p>You must have installed the packages <strong>servr</strong> (&gt;= 0.1.4) and <strong>knitr</strong> (&gt;= 1.6.20). If you do not see them on CRAN, you may temporarily install from GitHub:</p>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r">install.packages<span class="p">(</span>
-  <span class="kt">c</span><span class="p">(</span><span class="s">&#39;servr&#39;</span><span class="p">,</span> <span class="s">&#39;knitr&#39;</span><span class="p">),</span>
-  type <span class="o">=</span> <span class="s">&#39;source&#39;</span><span class="p">,</span>
-  repos <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&#39;http://yihui.name/xran&#39;</span><span class="p">,</span> <span class="s">&#39;http://cran.rstudio.com&#39;</span><span class="p">)</span>
-<span class="p">)</span></code></pre></div>
-
-<p>Of course, you have to install <a href="http://jekyllrb.com">Jekyll</a> as well. For Windows users, you have to make sure <code>jekyll</code> can be found from your environment variable <code>PATH</code>, i.e., R can call it via <code>system('jekyll')</code>. This is normally not an issue for Linux or Mac OS X users (<code>gem install jekyll</code> is enough).</p>
-
-<h2 id="r-code-chunks">R code chunks</h2>
-
-<p>Now we write some R code chunks in this post. For example,</p>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">options</span><span class="p">(</span>digits <span class="o">=</span> <span class="m">3</span><span class="p">)</span>
-<span class="kp">cat</span><span class="p">(</span><span class="s">&quot;hello world!&quot;</span><span class="p">)</span></code></pre></div>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">## hello world!</code></pre></div>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">set.seed</span><span class="p">(</span><span class="m">123</span><span class="p">)</span>
-<span class="p">(</span>x <span class="o">=</span> rnorm<span class="p">(</span><span class="m">40</span><span class="p">)</span> <span class="o">+</span> <span class="m">10</span><span class="p">)</span></code></pre></div>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">##  [1]  9.44  9.77 11.56 10.07 10.13 11.72 10.46  8.73  9.31  9.55 11.22
-## [12] 10.36 10.40 10.11  9.44 11.79 10.50  8.03 10.70  9.53  8.93  9.78
-## [23]  8.97  9.27  9.37  8.31 10.84 10.15  8.86 11.25 10.43  9.70 10.90
-## [34] 10.88 10.82 10.69 10.55  9.94  9.69  9.62</code></pre></div>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># generate a table</span>
-knitr<span class="o">::</span>kable<span class="p">(</span><span class="kp">head</span><span class="p">(</span>mtcars<span class="p">))</span></code></pre></div>
-
-<table>
-  <thead>
-    <tr>
-      <th style="text-align: left"> </th>
-      <th style="text-align: right">mpg</th>
-      <th style="text-align: right">cyl</th>
-      <th style="text-align: right">disp</th>
-      <th style="text-align: right">hp</th>
-      <th style="text-align: right">drat</th>
-      <th style="text-align: right">wt</th>
-      <th style="text-align: right">qsec</th>
-      <th style="text-align: right">vs</th>
-      <th style="text-align: right">am</th>
-      <th style="text-align: right">gear</th>
-      <th style="text-align: right">carb</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align: left">Mazda RX4</td>
-      <td style="text-align: right">21.0</td>
-      <td style="text-align: right">6</td>
-      <td style="text-align: right">160</td>
-      <td style="text-align: right">110</td>
-      <td style="text-align: right">3.90</td>
-      <td style="text-align: right">2.62</td>
-      <td style="text-align: right">16.5</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">4</td>
-      <td style="text-align: right">4</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">Mazda RX4 Wag</td>
-      <td style="text-align: right">21.0</td>
-      <td style="text-align: right">6</td>
-      <td style="text-align: right">160</td>
-      <td style="text-align: right">110</td>
-      <td style="text-align: right">3.90</td>
-      <td style="text-align: right">2.88</td>
-      <td style="text-align: right">17.0</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">4</td>
-      <td style="text-align: right">4</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">Datsun 710</td>
-      <td style="text-align: right">22.8</td>
-      <td style="text-align: right">4</td>
-      <td style="text-align: right">108</td>
-      <td style="text-align: right">93</td>
-      <td style="text-align: right">3.85</td>
-      <td style="text-align: right">2.32</td>
-      <td style="text-align: right">18.6</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">4</td>
-      <td style="text-align: right">1</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">Hornet 4 Drive</td>
-      <td style="text-align: right">21.4</td>
-      <td style="text-align: right">6</td>
-      <td style="text-align: right">258</td>
-      <td style="text-align: right">110</td>
-      <td style="text-align: right">3.08</td>
-      <td style="text-align: right">3.21</td>
-      <td style="text-align: right">19.4</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: right">1</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">Hornet Sportabout</td>
-      <td style="text-align: right">18.7</td>
-      <td style="text-align: right">8</td>
-      <td style="text-align: right">360</td>
-      <td style="text-align: right">175</td>
-      <td style="text-align: right">3.15</td>
-      <td style="text-align: right">3.44</td>
-      <td style="text-align: right">17.0</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: right">2</td>
-    </tr>
-    <tr>
-      <td style="text-align: left">Valiant</td>
-      <td style="text-align: right">18.1</td>
-      <td style="text-align: right">6</td>
-      <td style="text-align: right">225</td>
-      <td style="text-align: right">105</td>
-      <td style="text-align: right">2.76</td>
-      <td style="text-align: right">3.46</td>
-      <td style="text-align: right">20.2</td>
-      <td style="text-align: right">1</td>
-      <td style="text-align: right">0</td>
-      <td style="text-align: right">3</td>
-      <td style="text-align: right">1</td>
-    </tr>
-  </tbody>
-</table>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="p">(</span><span class="kr">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kr">if</span> <span class="p">(</span><span class="kc">TRUE</span><span class="p">)</span> 
-        <span class="m">1</span> <span class="o">+</span> <span class="m">1</span>  <span class="c1"># a boring comment</span>
-<span class="p">})()</span></code></pre></div>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">## [1] 2</code></pre></div>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kp">names</span><span class="p">(</span><span class="kp">formals</span><span class="p">(</span>servr<span class="o">::</span>jekyll<span class="p">))</span>  <span class="c1"># arguments of the jekyll() function</span></code></pre></div>
-
-<div class="highlight"><pre><code class="language-text" data-lang="text">## [1] &quot;dir&quot;     &quot;input&quot;   &quot;output&quot;  &quot;script&quot;  &quot;baseurl&quot; &quot;...&quot;</code></pre></div>
-
-<p>Just to test inline R expressions<sup id="fnref:2"><a href="#fn:2" class="footnote">2</a></sup> in <strong>knitr</strong>, we know the first element in <code>x</code> (created in the code chunk above) is 9.44. You can certainly draw some graphs as well:</p>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r">par<span class="p">(</span>mar <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">4</span><span class="p">,</span> <span class="m">4</span><span class="p">,</span> <span class="m">0.1</span><span class="p">,</span> <span class="m">0.1</span><span class="p">))</span>
-plot<span class="p">(</span>cars<span class="p">,</span> pch <span class="o">=</span> <span class="m">19</span><span class="p">,</span> col <span class="o">=</span> <span class="s">&quot;red&quot;</span><span class="p">)</span>  <span class="c1"># a scatterplot</span></code></pre></div>
-
-<p><img src="http://db.yihui.name/jekyll/2014-09-28-jekyll-with-knitr/cars-1.png" alt="A scatterplot of the cars data" /> </p>
-
-<h2 id="the-build-script">The build script</h2>
-
-<p>Zero-configuration is required for <code>servr::jekyll()</code> to work on your Jekyll website. However, there is always demand for more control over some options, which can be defined in a custom build script. Here are the arguments of <code>servr::jekyll()</code>:</p>
-
-<div class="highlight"><pre><code class="language-r" data-lang="r">jekyll<span class="p">(</span>dir <span class="o">=</span> <span class="s">&quot;.&quot;</span><span class="p">,</span> input <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">,</span> <span class="s">&quot;_source&quot;</span><span class="p">,</span> <span class="s">&quot;_posts&quot;</span><span class="p">),</span> output <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="s">&quot;.&quot;</span><span class="p">,</span> 
-    <span class="s">&quot;_posts&quot;</span><span class="p">,</span> <span class="s">&quot;_posts&quot;</span><span class="p">),</span> script <span class="o">=</span> <span class="s">&quot;build.R&quot;</span><span class="p">,</span> baseurl<span class="p">,</span> <span class="kc">...</span><span class="p">)</span></code></pre></div>
-
-<p>By default, <code>jekyll()</code> looks for <code>.Rmd</code> files under the root directory, the <code>_source</code> directory, and the <code>_posts</code> directory of the Jekyll website. For example, if you put your R Markdown posts under <code>_source</code>, they will be compiled to the <code>_posts</code> directory<sup id="fnref:3"><a href="#fn:3" class="footnote">3</a></sup>.</p>
-
-<p>The <code>script</code> argument specifies an R script to be used to compile your R Markdown files. It is called via command line of the form</p>
-
-<pre><code>Rscript build.R arg1 arg2
-</code></pre>
-
-<p>See <code>?servr::jekyll</code> for more details. You can define all your <strong>knitr</strong> options and any other options in this R script. See the script <a href="https://github.com/yihui/knitr-jekyll/blob/gh-pages/build.R">build.R</a> in the knitr-jekyll repository for an example: it will automatically set up the output renderers for <strong>knitr</strong>, e.g., when the Jekyll Markdown engine is <code>kramdown</code>, this script will call <code>knitr::render_jekyll()</code> so that the code chunk output will be put inside the Liquid tag <code>{% highlight lang %} {% endhighlight %}</code>; it also sets up some <strong>knitr</strong> chunk and package options so that figures can be displayed correctly. For those who do not wish to store images in GIT (because normally they are binary files), you may check out how I host my images in Dropbox for this repository (see the code below <code>Sys.getenv('USER') == 'yihui'</code>).</p>
-
-<h2 id="on-the-markdown-renderers">On the Markdown renderers</h2>
-
-<p>Jekyll supports a number of Markdown renderers, such as kramdown, redcarpet, rdiscount, and so on. At the moment, it is a little annoying that kramdown supports LaTeX math expressions via <code>$$ math $$</code><sup id="fnref:4"><a href="#fn:4" class="footnote">4</a></sup>, but does not support syntax highlighting of code blocks using the three backticks syntax (you must write the awkward Liquid tags); on the other hand, redcarpet does not support LaTeX math but does support three backticks. In my opinion, all the different flavors and implementations of Markdown is the biggest problem of Markdown, since there is not an unambiguous spec for Markdown. <a href="http://commonmark.org">CommonMark</a> looks like a promising project to set up a common spec for Markdown, and <a href="http://johnmacfarlane.net/pandoc/">Pandoc</a> is a great implementation that has brought almost all the features that you may ever need in Markdown. You may find some Pandoc plugins for Jekyll by searching online. However, GitHub Pages does not support arbitrary Jekyll plugins, so you cannot just use a Pandoc plugin there, but that does not mean you cannot use Pandoc locally, nor does it mean you cannot push locally compiled HTML pages to GitHub Pages<sup id="fnref:5"><a href="#fn:5" class="footnote">5</a></sup>.</p>
-
-<p>I’d love you to <a href="https://github.com/yihui/knitr-jekyll">fork</a> this repository, make some (hopefully minor) changes, and <a href="https://github.com/yihui/knitr-jekyll/issues">let me know</a> your success of using Pandoc with Jekyll. Happy hacking, and good luck!</p>
-<div class="footnotes">
-  <ol>
-    <li id="fn:1">
-      <p>Determined by the modification time of files, i.e., <code>file.info(x)[, 'mtime']</code>. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:2">
-      <p>The syntax in R Markdown for inline expressions is <code>`r code`</code>, where <code>code</code> is the R expression that you want to evaluate, e.g. <code>x[1]</code>. <a href="#fnref:2" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:3">
-      <p>The reason that we may need to write R Markdown posts in <code>_source</code> instead of <code>_posts</code> is that Jekyll seems to have a subtle bug at the moment: its variable <code>site.posts</code> will count <code>.Rmd</code> files under <code>_posts</code> as well. The consequence is, if you list all the posts of your website, the post <code>_posts/yyyy-mm-dd-foo.md</code> will show up twice due to the existence of <code>_posts/yyyy-mm-dd-foo.Rmd</code>, therefore I would recommend you to put your R Markdown posts in a separate directory, such as <code>_source</code>. <a href="#fnref:3" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:4">
-      <p>Unfortunately, kramdown does not support math expressions in single dollars, e.g. <code>$ \alpha $</code>. <a href="#fnref:4" class="reversefootnote">&#8617;</a></p>
-    </li>
-    <li id="fn:5">
-      <p>If you choose to generate your Jekyll website locally, and push the HTML files to GitHub, you will need the file <a href="https://help.github.com/articles/using-jekyll-with-pages"><code>.nojekyll</code></a> in the root directory of your website. <a href="#fnref:5" class="reversefootnote">&#8617;</a></p>
-    </li>
-  </ol>
-</div>
 </p>
       </li>
     
