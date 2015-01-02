@@ -1,0 +1,1 @@
+Rscript build.R _source/...Rmd _posts/...Rmd
