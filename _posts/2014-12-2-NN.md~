@@ -67,6 +67,7 @@ $$
 $$
 
 Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):
+
 ![NN graph][101]
 
 #### Cost Function
@@ -377,4 +378,4 @@ test_accurate$acu
  
  
  
-[101]:tikz12.png "NN"
+[101]:/figure/source/2014-12-2-NN/tikz12.png "NN"
