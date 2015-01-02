@@ -64,6 +64,7 @@ $$
 $$
 
 Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):
+
 ![NN graph][101]
 
 #### Cost Function
