@@ -6,13 +6,13 @@
 </description>
     <link>http://dada889.github.io/</link>
     <atom:link href="http://dada889.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 02 Jan 2015 15:40:30 +1300</pubDate>
-    <lastBuildDate>Fri, 02 Jan 2015 15:40:30 +1300</lastBuildDate>
+    <pubDate>Sat, 03 Jan 2015 21:59:31 +1300</pubDate>
+    <lastBuildDate>Sat, 03 Jan 2015 21:59:31 +1300</lastBuildDate>
     <generator>Jekyll v2.5.1</generator>
     
       <item>
         <title>Digit Recognizer by Neural Network</title>
-        <description>&lt;h3 id=&quot;intorduction&quot;&gt;Intorduction&lt;/h3&gt;
+        <description>&lt;h2 id=&quot;intorduction&quot;&gt;Intorduction&lt;/h2&gt;
 &lt;p&gt;This algorithm is for a &lt;a href=&quot;https://www.kaggle.com/c/digit-recognizer&quot;&gt;kaggle competition&lt;/a&gt; to take an image of a handwritten single digit, and determine what that digit is. The data used is &lt;a href=&quot;https://www.kaggle.com/c/digit-recognizer/data&quot;&gt;MNIST data&lt;/a&gt;.     &lt;/p&gt;
 
 &lt;p&gt;The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  &lt;/p&gt;
@@ -43,9 +43,9 @@ sample_plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;sample_p&lt;span class=
 
 &lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-2-NN/unnamed-chunk-1-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-1&quot; /&gt; &lt;/p&gt;
 
-&lt;h3 id=&quot;neural-network-algorithm&quot;&gt;Neural Network Algorithm&lt;/h3&gt;
+&lt;h2 id=&quot;neural-network-algorithm&quot;&gt;Neural Network Algorithm&lt;/h2&gt;
 
-&lt;h4 id=&quot;forward-propagation&quot;&gt;Forward Propagation&lt;/h4&gt;
+&lt;h3 id=&quot;forward-propagation&quot;&gt;Forward Propagation&lt;/h3&gt;
 
 &lt;p&gt;The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.&lt;/p&gt;
 
@@ -67,9 +67,9 @@ a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
 
 &lt;p&gt;Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-2-NN/tikz12.png&quot; alt=&quot;NN graph&quot; /&gt; &lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-2-NN/tikz12.png&quot; alt=&quot;NN graph&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;cost-function&quot;&gt;Cost Function&lt;/h4&gt;
+&lt;h3 id=&quot;cost-function&quot;&gt;Cost Function&lt;/h3&gt;
 
 &lt;p&gt;For classification problem, we use Cross-entropy cost function:    &lt;/p&gt;
 
@@ -84,7 +84,7 @@ J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a
 J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
 &lt;/script&gt;
 
-&lt;h4 id=&quot;back-propagation&quot;&gt;Back Propagation&lt;/h4&gt;
+&lt;h3 id=&quot;back-propagation&quot;&gt;Back Propagation&lt;/h3&gt;
 
 &lt;p&gt;From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:&lt;/p&gt;
 
@@ -147,7 +147,7 @@ J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{
   &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;train-the-model&quot;&gt;Train The Model&lt;/h3&gt;
+&lt;h2 id=&quot;train-the-model&quot;&gt;Train The Model&lt;/h2&gt;
 
 &lt;p&gt;First, we randomly select 70% of data as training data set.&lt;/p&gt;
 
@@ -305,7 +305,7 @@ costFunction &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot
   &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;par&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;X&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cost&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;fX&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;training-result&quot;&gt;Training Result&lt;/h3&gt;
+&lt;h2 id=&quot;training-result&quot;&gt;Training Result&lt;/h2&gt;
 
 &lt;p&gt;The result is achieve by training this model with 29400 data in 200000 iteration.&lt;/p&gt;
 
@@ -343,7 +343,7 @@ test_nl &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&qu
 test_accurate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; check_accurate&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;test_nl&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;test_y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;par&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;lambda&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lambda&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 test_accurate&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;acu&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;refference&quot;&gt;Refference&lt;/h3&gt;
+&lt;h2 id=&quot;refference&quot;&gt;Refference&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.coursera.org/course/ml&quot;&gt;Stanford University Machine Learning online course&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;The Elements of Statistical Learning, Data Mining, Inference, and Prediction&lt;/li&gt;

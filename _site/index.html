@@ -74,7 +74,7 @@ MathJax.Hub.Config({
         <h2>
           <a class="post-link" href="/2014/12/NN.html">Digit Recognizer by Neural Network</a>
         </h2>
-	<p><h3 id="intorduction">Intorduction</h3>
+	<p><h2 id="intorduction">Intorduction</h2>
 <p>This algorithm is for a <a href="https://www.kaggle.com/c/digit-recognizer">kaggle competition</a> to take an image of a handwritten single digit, and determine what that digit is. The data used is <a href="https://www.kaggle.com/c/digit-recognizer/data">MNIST data</a>.     </p>
 
 <p>The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  </p>
@@ -105,9 +105,9 @@ sample_plot<span class="p">(</span>sample_p<span class="p">,</span><span class="
 
 <p><img src="/figure/source/2014-12-2-NN/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /> </p>
 
-<h3 id="neural-network-algorithm">Neural Network Algorithm</h3>
+<h2 id="neural-network-algorithm">Neural Network Algorithm</h2>
 
-<h4 id="forward-propagation">Forward Propagation</h4>
+<h3 id="forward-propagation">Forward Propagation</h3>
 
 <p>The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.</p>
 
@@ -129,9 +129,9 @@ a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
 
 <p>Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):</p>
 
-<p><img src="/figure/source/2014-12-2-NN/tikz12.png" alt="NN graph" /> </p>
+<p><img src="/figure/source/2014-12-2-NN/tikz12.png" alt="NN graph" /></p>
 
-<h4 id="cost-function">Cost Function</h4>
+<h3 id="cost-function">Cost Function</h3>
 
 <p>For classification problem, we use Cross-entropy cost function:    </p>
 
@@ -146,7 +146,7 @@ J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a
 J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
 </script>
 
-<h4 id="back-propagation">Back Propagation</h4>
+<h3 id="back-propagation">Back Propagation</h3>
 
 <p>From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:</p>
 
@@ -209,7 +209,7 @@ J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{
   <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
 <span class="p">}</span></code></pre></div>
 
-<h3 id="train-the-model">Train The Model</h3>
+<h2 id="train-the-model">Train The Model</h2>
 
 <p>First, we randomly select 70% of data as training data set.</p>
 
@@ -367,7 +367,7 @@ costFunction <span class="o">=</span> <span class="kr">function</span><span clas
   <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>par<span class="o">=</span>X<span class="p">,</span>cost<span class="o">=</span>fX<span class="p">))</span>
 <span class="p">}</span></code></pre></div>
 
-<h3 id="training-result">Training Result</h3>
+<h2 id="training-result">Training Result</h2>
 
 <p>The result is achieve by training this model with 29400 data in 200000 iteration.</p>
 
@@ -405,7 +405,7 @@ test_nl <span class="o">=</span> <span class="p">(</span>test<span class="m">-12
 test_accurate <span class="o">=</span> check_accurate<span class="p">(</span>test_nl<span class="p">,</span>test_y<span class="p">,</span>par<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">)</span>
 test_accurate<span class="o">$</span>acu</code></pre></div>
 
-<h3 id="refference">Refference</h3>
+<h2 id="refference">Refference</h2>
 <ul>
   <li><a href="https://www.coursera.org/course/ml">Stanford University Machine Learning online course</a></li>
   <li>The Elements of Statistical Learning, Data Mining, Inference, and Prediction</li>
