@@ -6,7 +6,7 @@ tags: [neural network, machine learning, kaggle]
 
 ---
 
-### Intorduction    
+## Intorduction    
 This algorithm is for a [kaggle competition](https://www.kaggle.com/c/digit-recognizer) to take an image of a handwritten single digit, and determine what that digit is. The data used is [MNIST data](https://www.kaggle.com/c/digit-recognizer/data).     
 
 The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  
@@ -43,9 +43,9 @@ sample_plot(sample_p,16)
 
 
 
-### Neural Network Algorithm  
+## Neural Network Algorithm  
 
-#### Forward Propagation
+### Forward Propagation
 
 The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.
 
@@ -70,7 +70,7 @@ Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden
 
 ![NN graph][101]
 
-#### Cost Function
+### Cost Function
 
 For classification problem, we use Cross-entropy cost function:    
 
@@ -85,7 +85,7 @@ $$
 J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
 $$
 
-#### Back Propagation
+### Back Propagation
 
 From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:
 
@@ -153,7 +153,7 @@ NN_cost = function(data, y, init, h_layer=25, lambda=0, num_labels=10) {
 }
 {% endhighlight %}
 
-### Train The Model
+## Train The Model
 
 First, we randomly select 70% of data as training data set.
 
@@ -323,7 +323,7 @@ fmincg = function(f,X, Maxiter=10) {
 {% endhighlight %}
 
 
-### Training Result
+## Training Result
 
 The result is achieve by training this model with 29400 data in 200000 iteration.
 
@@ -370,7 +370,7 @@ test_accurate = check_accurate(test_nl,test_y,par,lambda=lambda)
 test_accurate$acu
 {% endhighlight %}
 
-### Refference
+## Refference
  - [Stanford University Machine Learning online course](https://www.coursera.org/course/ml)
  - The Elements of Statistical Learning, Data Mining, Inference, and Prediction
  - Machine Learning An Algorithmic Perspective
@@ -378,4 +378,4 @@ test_accurate$acu
  
  
  
-[101]:/figure/source/2014-12-2-NN/tikz12.png "NN"
+[101]:tikz12.png "NN"
