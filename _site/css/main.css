@@ -290,10 +290,11 @@ pre {
  * Page content
  */
 .page-content {
-  padding: 30px 0; }
+  padding: 30px 0;
+  font-size: 15px; }
 
 .page-heading {
-  font-size: 20px; }
+  font-size: 25px; }
 
 .post-list {
   margin-left: 0;
@@ -307,7 +308,7 @@ pre {
 
 .post-link {
   display: block;
-  font-size: 24px; }
+  font-size: 27px; }
 
 /** New Add  */
 .page-header {

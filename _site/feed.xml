@@ -6,9 +6,456 @@
 </description>
     <link>http://dada889.github.io/</link>
     <atom:link href="http://dada889.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 03 Jan 2015 21:59:31 +1300</pubDate>
-    <lastBuildDate>Sat, 03 Jan 2015 21:59:31 +1300</lastBuildDate>
+    <pubDate>Sat, 03 Jan 2015 23:47:35 +1300</pubDate>
+    <lastBuildDate>Sat, 03 Jan 2015 23:47:35 +1300</lastBuildDate>
     <generator>Jekyll v2.5.1</generator>
+    
+      <item>
+        <title>Support-Vector-Machine</title>
+        <description>&lt;h2 id=&quot;what-is-support-vecor-machine&quot;&gt;What is Support vecor machine&lt;/h2&gt;
+&lt;p&gt;According to &lt;a href=&quot;http://en.wikipedia.org/wiki/Support_vector_machine&quot;&gt;wikipedia&lt;/a&gt;, support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis.&lt;/p&gt;
+
+&lt;p&gt;SVMs were introduced by Vapnik in 1992, they often provide significantly better classfication performance than other machine learning algorithms on reasonably sized datasets.&lt;/p&gt;
+
+&lt;h2 id=&quot;learning-model&quot;&gt;Learning model&lt;/h2&gt;
+
+&lt;p&gt;$X$ is the matrix of training data with $n$ rows and $d$ columns, $x_1,…,x_n \in \mathbb{R}^d$. Suppose given a dot product space $\mathcal{H}$, and $h(x)$ is a transformed feature vectors. We will have kernal data $h(x_1),….,h(x_n) \in \mathcal{H}$. Any hyperplane in $\mathcal{H}$ can be written as:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;
+\{h(x) \in \mathcal{H} | w \cdot h(x) - b = 0 \}, w \in \mathcal{H}, b \in \mathbb{R}
+&lt;/script&gt;
+
+&lt;p&gt;Given a pair of ($w,b$), we have decision function for two class:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+
+\begin{aligned}
+        f(x) &amp; =  w \cdot h(x) - b   &amp;     &amp; \\
+ for:  &amp; f(x_i) \geq 1 - \xi_i          &amp; \hat{y_i} &amp; = 1 \\
+       &amp; f(x_i) \leq -(1 - \xi_i)          &amp; \hat{y_i} &amp; = -1 \\
+\end{aligned}
+ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;$\xi_i$ is non-negative slack variable. In order to find the hyperplane that creates the biggest margin between the two class $1$ and $-1$, we will keep $| w|$ as small as possible. We will choose $w$ and $b$ that minimize $| w|$ in condition of $y_if(x_i)\geq 1-\xi_i$ and $\xi_i\geq 0$ for all $i$. The optimization problem can be formulated with penalty term:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+
+\begin{aligned}
+ \underset{w,b}{\text{minimize}} &amp; \frac{1}{2}\| w\|^2 +C\sum\limits_{i=1}^n\xi_i  &amp;\\
+ \text{subject to:}                     &amp; y_if(x_i) + \xi_i -1 &gt; 0                  &amp;\forall i \\
+                                 &amp; \xi_i \geq 0                                    &amp;\forall i
+\end{aligned}
+ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;$C$ is a constant penalty value, if $C=\infty$, we would have perfect seperating case. This is a constrained optimization problem, and this problem can be solve by Lagrangian. The Lagrange (primal) function with lagrange multiplier $\alpha_i$ and $\mu_i$ are:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;
+\mathcal{L}(w,b,\alpha,\mu) = \frac{1}{2}\|w\|^2 + C\sum\limits_{i=1}^n\xi_i - \sum\limits_{i=1}^n\alpha_i[y_if(x_i)+\xi_i -1] - \sum\limits_{i=1}^n\mu_i\xi_i
+&lt;/script&gt;
+
+&lt;p&gt;We can minimize $\mathcal{L}$ with $w$ and $b$ to get the dual problem:&lt;/p&gt;
+
+&lt;p&gt;$w$, $\xi_i$ and their Lagrange multipers can be cancel out in the Wolfe dual problem:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+
+\begin{aligned}
+ \underset{\alpha}{\text{maximize}} &amp; \mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jh(x_i)^Th(x_j) &amp;\\
+ \text{subject to:}                     &amp; 0\leq \alpha_i \leq C                  &amp;\forall i \\
+                                 &amp; \sum\limits_{i=1}^n \alpha_iy_i = 0                                    &amp;\forall i
+\end{aligned}
+ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;Which gives the lower bound of $\mathcal{L}$ for any fesible point. We maximize $\mathcal{L}$ subject to $0\leq \alpha\leq C$ and $\sum_{i=1}^n\alpha_i y_i=0$ under the KKT(Karush-Kuhn-Tucker) conditions:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+
+\begin{aligned}
+   \alpha_i=0 &amp; \Rightarrow &amp; y_if(x_i)\leq 1 \\
+0&lt;\alpha_i&lt;C  &amp; \Rightarrow &amp; y_if(x_i)= 1 \\
+   \alpha_i=C &amp; \Rightarrow &amp; y_if(x_i)\geq 1
+\end{aligned}
+ %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;The inner product of $h(x_i)^T$ and $h(x_j)$ can be written $\langle h(x_i),h(x_j)\rangle$. We can use kernel function:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;
+K(x_i,x_j)=\langle h(x_i),h(x_j)\rangle
+&lt;/script&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;
+\mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jK(x_i,x_j)
+&lt;/script&gt;
+
+&lt;p&gt;SMO(Sequential minimal optimization) can be used to maximize $\mathcal{L}_D(\alpha)$, here is the SMO optimization R code for the above optimization problem:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;takeStep &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; j1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1 &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; j1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  alphai &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  yi &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  yj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  ui &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; b
+  uj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; b
+&lt;span class=&quot;c1&quot;&gt;#   ui = x[i1,]%*%w - b&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#   uj = x[j1,]%*%w - b&lt;/span&gt;
+  Ei &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ui &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; yi
+  Ej &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; uj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; yj
+  
+  &lt;span class=&quot;c1&quot;&gt;#compute H and L use old alpha i and j&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; C&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    H &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    H &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; C &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;L &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; H&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  eta &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  
+  
+  &lt;span class=&quot;c1&quot;&gt;#compute new alpha j and i as alphaj and alphai&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;eta &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphaj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; yj&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Ei &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; Ej&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;eta
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; L&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; L
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; H&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; H
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    Lobj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; objfun&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;L&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    Hobj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; objfun&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;H&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Lobj &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; Hobj &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; eps&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+      alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; L
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Lobj &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; Hobj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; eps&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; H
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1e-8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; C&lt;span class=&quot;m&quot;&gt;-1e-8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; C
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; eps&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  alphai &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;alphaj&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  
+  
+  &lt;span class=&quot;c1&quot;&gt;#compute new b and assign&lt;/span&gt;
+  b1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; Ei &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphai&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  b2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; b &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; Ej &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphai&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphaj&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# update b&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; b1
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; b2
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;b1&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;b2&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  
+  &lt;span class=&quot;c1&quot;&gt;#assign new alpha i and j to alphas&lt;/span&gt;
+  alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphai
+  alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphaj
+  
+  &lt;span class=&quot;c1&quot;&gt;#update new weight vector&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#w = colSums(apply(x, 2, function(z) y*z*alphas))&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#update error&lt;/span&gt;
+  ui &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; b
+  uj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;,])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; b
+  &lt;span class=&quot;c1&quot;&gt;#ui = x[i1,]%*%w - b&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#uj = x[j1,]%*%w - b&lt;/span&gt;
+  error&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ui &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  error&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; uj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+examineExample &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;j&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;  b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  yj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  alphaj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#w = colSums(apply(x, 2, function(z) y*z*alphas))&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#uj = x[j,]%*%w - b&lt;/span&gt;
+  uj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;j&lt;span class=&quot;p&quot;&gt;,])&lt;/span&gt;
+  Ej &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; uj &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; yj
+  rj &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Ej&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;yj
+  &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;rj &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;tol &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphaj &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; C&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;rj &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; tol &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphaj &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# first heuristic: choose i that maximize abs(Ei -Ej), only select from suport vector&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;#pos = which(alphas != 0 | alphas != C)&lt;/span&gt;
+    pos &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;eps &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;#rest = which(!(alphas != 0 &amp;amp; alphas != C))&lt;/span&gt;
+    rest &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;eps &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;pos&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# select i from unbound max abs(Ej - Ei)&lt;/span&gt;
+      temp &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      temp&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;pos&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;as.numeric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Ej&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; error&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;pos&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+      i1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which.max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;temp&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      heu1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; takeStep&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; j&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;heu1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;val&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;#w = heu1$w&lt;/span&gt;
+        alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+        error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;error
+        b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+        n &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; n&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;
+        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Iteration&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  heu1&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  b&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;c1&quot;&gt;# second heuristic: loop over i from all SV&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1 &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;pos&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;pos&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;eps &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        heu2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; takeStep&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; j&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;heu2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;val&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+          &lt;span class=&quot;c1&quot;&gt;#w = heu2$w&lt;/span&gt;
+          alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+          error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;error
+          b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+          n &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; n&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;
+          &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Iteration&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  heu 2&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  b&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+          result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+          &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# third heuristic: loop through the rest of data set&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;#rest = which(!(alphas != 0 &amp;amp; alphas != C))&lt;/span&gt;
+    rest &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;eps &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;#print(cat(&amp;#39;rest&amp;#39;,length(rest)))&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1 &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;sample&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;rest&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;rest&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      heu3 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; takeStep&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; j&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;heu3&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;val&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;#w = heu3$w&lt;/span&gt;
+        alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu3&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+        error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu3&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;error
+        b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; heu3&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+        n &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; n&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;
+        &lt;span class=&quot;kp&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Iteration&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  heu  3&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;  b&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+        result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;val&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;    b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+
+main &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#w = as.numeric(0)&lt;/span&gt;
+  n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+  alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#initial alphas&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;#w = colSums(apply(x, 2, function(z) y*z*alphas)) #in order to initial b&lt;/span&gt;
+  b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;#initial b&lt;/span&gt;
+  error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  eps &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1e-3&lt;/span&gt;
+  numChanged &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+  examineAll &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;while&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;numChanged &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; examineAll&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    numChanged &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;examineAll&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i0 &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# loop through all data set&lt;/span&gt;
+        examA &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examineExample&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i0&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tol&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        numChanged &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; numChanged &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; examA&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;val
+        &lt;span class=&quot;c1&quot;&gt;#w = examA$w&lt;/span&gt;
+        alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examA&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+        error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examA&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;error
+        b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examA&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+        n &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examA&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;n
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; 
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      unbound &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt; alphas&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;#unbound = which(alphas&amp;gt;eps &amp;amp; alphas&amp;lt;(C-eps))&lt;/span&gt;
+      &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i0 &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; unbound&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;c1&quot;&gt;# loop through only the unbound data&lt;/span&gt;
+        examB &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examineExample&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i0&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;k&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;   b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;eps&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;eps&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;tol&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;C&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;error&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;n&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;n&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        numChanged &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; numChanged &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; examB&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;val
+        &lt;span class=&quot;c1&quot;&gt;#w = examB$w&lt;/span&gt;
+        alphas &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examB&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+        error &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examB&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;error
+        b &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examB&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+        n &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; examB&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;n
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;examineAll &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      examineAll &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;numChanged &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      examineAll &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  result &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alphas&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;b&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;result&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;smo-algorithm&quot;&gt;SMO Algorithm&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Sequential_minimal_optimization&quot;&gt;SMO&lt;/a&gt; is an algotirhm for solving quadratic programming problem.  &lt;/p&gt;
+
+&lt;p&gt;I Still working on a mathematic explanation for my SMO code.&lt;/p&gt;
+
+&lt;h2 id=&quot;application&quot;&gt;Application&lt;/h2&gt;
+
+&lt;h3 id=&quot;linear-seperator&quot;&gt;Linear Seperator&lt;/h3&gt;
+
+&lt;p&gt;Here is the plot of data.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;&lt;span class=&quot;kn&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;R.matlab&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+data &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; readMat&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;ex6data1.mat&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+X &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;X
+Y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y
+Y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+x1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; X&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;Y&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+x2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; X&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;Y&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; pch&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;col&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;blue&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;xlim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;ylim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;
+points&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; pch&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;col&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;red&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-2-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-2&quot; /&gt; &lt;/p&gt;
+
+&lt;p&gt;We can find that there is a outlier in red points at top left corner. Should we consider this outlier or no? SVM is able to deal with this kind of situation.&lt;/p&gt;
+
+&lt;p&gt;With different $C$, SVM will find different hyperplane to seperate the data:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;X1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;X
+Y1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y
+Y1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y1&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+K1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; kernal_linear&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+test1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+alphas1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;test1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+b1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; test1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+w1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas1&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%*%&lt;/span&gt;X1
+
+linearplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;w1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;C=1000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-4-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-4&quot; /&gt; &lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;X1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;X
+Y1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y
+Y1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y1&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+K1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; kernal_linear&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+test1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+alphas1&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;test1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;alphas
+b1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; test1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;b
+w1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;alphas1&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%*%&lt;/span&gt;X1
+
+linearplot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;w1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;b1&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;C=1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-6-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-6&quot; /&gt; &lt;/p&gt;
+
+&lt;h3 id=&quot;non-linear-seperator&quot;&gt;Non-linear Seperator&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Radial_basis_function_kernel&quot;&gt;Radial basis function kernel&lt;/a&gt; (RBF) has been used for non-linear seperator.&lt;/p&gt;
+
+&lt;p&gt;Here is the data&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;data2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; readMat&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;ex6data2.mat&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+X2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;X
+Y2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y
+Y2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y2&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cex&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;col&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;xlim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;ylim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;xlab&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;ylab&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-7-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-7&quot; /&gt; &lt;/p&gt;
+
+&lt;p&gt;Train the data set with different $C$ and $\sigma$&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;data2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; readMat&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;ex6data2.mat&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+X2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;X
+Y2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data2&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y
+Y2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y2&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+K1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; kernal_RBF&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+test1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+K2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; kernal_RBF&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.029&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+test2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; main&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;tol&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Here is the function to visulize the training result&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;Predict &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svalpha&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svX&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svY&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#   indx = alpha&amp;gt;0&lt;/span&gt;
+  x1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;rowSums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  sv1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;rowSums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;svX&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  temp &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;-2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;x&lt;span class=&quot;o&quot;&gt;%*%&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;svX&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  k1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;temp&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; z&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;sv1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  k &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k1&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; z&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;x1&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  k &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;exp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;k&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;^&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  k1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; z&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;svY&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  k2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;apply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k1&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; z&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;svalpha&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  K &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;k2&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  K &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;rowSums&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  K&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;K&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+  K&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;K&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;K&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+gen_space &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alpha&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
+  idx &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alpha&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+  x1plot &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;l&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  x2plot &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;l&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  xx1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x1plot&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  xx2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x2plot&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;l&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  
+  svX2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; data&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;idx&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+  svY2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Y&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;idx&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+  svalphas2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; alpha&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;idx2&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt;
+  vals &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;nrow&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;xx1&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;ncol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;xx2&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;i &lt;span class=&quot;kr&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;ncol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;xx1&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    xx &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;cbind&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;xx1&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;i&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;xx2&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;i&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+    vals&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;i&lt;span class=&quot;p&quot;&gt;,]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Predict&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;xx&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svalphas2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svX2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;svY2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sigma&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;return&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;x1plot&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;y&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;x2plot&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;z&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vals&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#   contour(x1plot,x2plot,vals,nlevels=nlevel,lty=lty)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;Visualize the two hyperplanes&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-r&quot; data-lang=&quot;r&quot;&gt;alphas2 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; read.table&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s0.1c1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+space &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; gen_space&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alphas2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+plot&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;cex&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;col&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;xlim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;ylim&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;range&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;[,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]),&lt;/span&gt;xlab&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;ylab&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;main&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;Non-linear seperator&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+contour&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;space&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;space&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;space&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;nlevels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;lty&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;add&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;lwd&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;labels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sigma0.1 C1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+alpha &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; read.table&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;s0.029c100&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+space1 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; gen_space&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;X2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;Y2&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;alpha&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;sigma&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.029&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+contour&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;space1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;x&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;space1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;y&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;space1&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;z&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;nlevels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;lty&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;add&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;T&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;col&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;lwd&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;labels&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;sigma0.029 C100&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-11-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-11&quot; /&gt; &lt;/p&gt;
+
+&lt;h1 id=&quot;refference&quot;&gt;Refference&lt;/h1&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond&lt;/li&gt;
+  &lt;li&gt;The Elements of Statistical Learning, Data Mining, Inference, and Prediction&lt;/li&gt;
+  &lt;li&gt;Sequential Minimal Optimization: A Fast Algorithm for Training Support Vector Machines, 1998, John C. Platt&lt;/li&gt;
+  &lt;li&gt;Coursera &lt;a href=&quot;https://class.coursera.org/ml-006&quot;&gt;Stanford University Machine Learning&lt;/a&gt; online course&lt;/li&gt;
+  &lt;li&gt;Edx &lt;a href=&quot;https://courses.edx.org/courses/CaltechX/CS_1156x/3T2014/info&quot;&gt;Learning From Data&lt;/a&gt; online course&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.pluskid.org/?page_id=683&quot;&gt;Free Mind Blog&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 16 Dec 2014 00:00:00 +1300</pubDate>
+        <link>http://dada889.github.io/2014/12/Support-Vector-Machine.html</link>
+        <guid isPermaLink="true">http://dada889.github.io/2014/12/Support-Vector-Machine.html</guid>
+        
+        <category>support vector machine</category>
+        
+        <category>machine learning</category>
+        
+        <category>SMO</category>
+        
+        
+        <category>r</category>
+        
+      </item>
     
       <item>
         <title>Digit Recognizer by Neural Network</title>

@@ -1,0 +1,473 @@
+---
+layout: post
+title: "2014-12-16-Support-Vector-Machine"
+categories: [R]
+tags: [support vector machine, machine learning, SMO]
+---
+
+## What is Support vecor machine
+According to [wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine), support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis.
+
+SVMs were introduced by Vapnik in 1992, they often provide significantly better classfication performance than other machine learning algorithms on reasonably sized datasets.
+
+
+## Learning model
+
+$X$ is the matrix of training data with $n$ rows and $d$ columns, $x_1,...,x_n \in \mathbb{R}^d$. Suppose given a dot product space $\mathcal{H}$, and $h(x)$ is a transformed feature vectors. We will have kernal data $h(x_1),....,h(x_n) \in \mathcal{H}$. Any hyperplane in $\mathcal{H}$ can be written as:
+
+$$
+\{h(x) \in \mathcal{H} | w \cdot h(x) - b = 0 \}, w \in \mathcal{H}, b \in \mathbb{R}
+$$
+
+Given a pair of ($w,b$), we have decision function for two class:
+
+$$
+\begin{aligned}
+        f(x) & =  w \cdot h(x) - b   &     & \\
+ for:  & f(x_i) \geq 1 - \xi_i          & \hat{y_i} & = 1 \\
+       & f(x_i) \leq -(1 - \xi_i)          & \hat{y_i} & = -1 \\
+\end{aligned}
+$$
+
+$\xi_i$ is non-negative slack variable. In order to find the hyperplane that creates the biggest margin between the two class $1$ and $-1$, we will keep $\| w\|$ as small as possible. We will choose $w$ and $b$ that minimize $\| w\|$ in condition of $y_if(x_i)\geq 1-\xi_i$ and $\xi_i\geq 0$ for all $i$. The optimization problem can be formulated with penalty term:
+
+$$
+\begin{aligned}
+ \underset{w,b}{\text{minimize}} & \frac{1}{2}\| w\|^2 +C\sum\limits_{i=1}^n\xi_i  &\\
+ \text{subject to:}                     & y_if(x_i) + \xi_i -1 > 0                  &\forall i \\
+                                 & \xi_i \geq 0                                    &\forall i
+\end{aligned}
+$$
+
+$C$ is a constant penalty value, if $C=\infty$, we would have perfect seperating case. This is a constrained optimization problem, and this problem can be solve by Lagrangian. The Lagrange (primal) function with lagrange multiplier $\alpha_i$ and $\mu_i$ are:
+
+$$
+\mathcal{L}(w,b,\alpha,\mu) = \frac{1}{2}\|w\|^2 + C\sum\limits_{i=1}^n\xi_i - \sum\limits_{i=1}^n\alpha_i[y_if(x_i)+\xi_i -1] - \sum\limits_{i=1}^n\mu_i\xi_i
+$$
+
+
+We can minimize $\mathcal{L}$ with $w$ and $b$ to get the dual problem:
+
+
+
+
+
+
+$w$, $\xi_i$ and their Lagrange multipers can be cancel out in the Wolfe dual problem:
+
+$$
+\begin{aligned}
+ \underset{\alpha}{\text{maximize}} & \mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jh(x_i)^Th(x_j) &\\
+ \text{subject to:}                     & 0\leq \alpha_i \leq C                  &\forall i \\
+                                 & \sum\limits_{i=1}^n \alpha_iy_i = 0                                    &\forall i
+\end{aligned}
+$$
+
+Which gives the lower bound of $\mathcal{L}$ for any fesible point. We maximize $\mathcal{L}$ subject to $0\leq \alpha\leq C$ and $\sum_{i=1}^n\alpha_i y_i=0$ under the KKT(Karush-Kuhn-Tucker) conditions:
+
+$$
+\begin{aligned}
+   \alpha_i=0 & \Rightarrow & y_if(x_i)\leq 1 \\
+0<\alpha_i<C  & \Rightarrow & y_if(x_i)= 1 \\
+   \alpha_i=C & \Rightarrow & y_if(x_i)\geq 1
+\end{aligned}
+$$
+
+The inner product of $h(x_i)^T$ and $h(x_j)$ can be written $\langle h(x_i),h(x_j)\rangle$. We can use kernel function:
+
+$$
+K(x_i,x_j)=\langle h(x_i),h(x_j)\rangle
+$$
+
+$$
+\mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jK(x_i,x_j)
+$$
+
+SMO(Sequential minimal optimization) can be used to maximize $\mathcal{L}_D(\alpha)$, here is the SMO optimization R code for the above optimization problem:
+
+
+{% highlight r %}
+takeStep = function(i1, j1, k,y,  b,alphas,eps,C,error) {
+  if (i1 == j1) {
+    return(list(val=0))
+  }
+  alphai = alphas[i1]
+  alphaj = alphas[j1]
+  yi = y[i1]
+  yj = y[j1]
+  ui = sum(alphas*y*k[i1,]) - b
+  uj = sum(alphas*y*k[j1,]) - b
+#   ui = x[i1,]%*%w - b
+#   uj = x[j1,]%*%w - b
+  Ei = ui - yi
+  Ej = uj - yj
+  
+  #compute H and L use old alpha i and j
+  if(y[i1] == y[j1]) {
+    L = max(0, alphas[j1] + alphas[i1] - C)
+    H = min(C,alphas[i1] + alphas[j1])
+  } else {
+    L = max(0, alphas[j1] - alphas[i1])
+    H = min(C, C + alphas[j1] - alphas[i1])
+  }
+  if (L == H) {
+    return(list(val=0))
+  }
+  eta = 2*k[i1,j1] - k[i1,i1] - k[j1,j1]
+  
+  
+  #compute new alpha j and i as alphaj and alphai
+  if (eta < 0) {
+    alphaj = alphaj - yj*(Ei - Ej)/eta
+    if (alphaj < L) {
+      alphaj = L
+    } else if (alphaj > H) {
+      alphaj = H
+    }
+  } else {
+    Lobj = objfun(alphas,j1,L,y,k)
+    Hobj = objfun(alphas,j1,H,y,k)
+    if (Lobj > Hobj + eps){
+      alphaj = L
+    } else if (Lobj < Hobj - eps) {
+      alphaj = H
+    } 
+  }
+  if (alphaj < 1e-8) {
+    alphaj = 0
+  } else if (alphaj > C-1e-8) {
+    alphaj = C
+  }
+  if (abs(alphaj - alphas[j1]) < eps*(alphaj+alphas[j1]+eps)) {
+    return(list(val=0))
+  }
+  alphai = alphas[i1]+y[i1]*y[j1]*(alphas[j1]-alphaj)
+  
+  
+  #compute new b and assign
+  b1 = b + Ei + y[i1]*(alphai-alphas[i1])*k[i1,i1] + y[j1]*(alphaj-alphas[j1])*k[i1,j1]
+  b2 = b + Ej + y[i1]*(alphai-alphas[i1])*k[i1,j1] + y[j1]*(alphaj-alphas[j1])*k[j1,j1]
+  # update b
+  if (alphas[i1]>0 & alphas[i1]<C) {
+    b = b1
+  } else if (alphas[j1]>0 & alphas[j1]<C) {
+    b = b2
+  } else {
+    b = (b1+b2)/2
+  }
+  
+  #assign new alpha i and j to alphas
+  alphas[i1] = alphai
+  alphas[j1] = alphaj
+  
+  #update new weight vector
+  #w = colSums(apply(x, 2, function(z) y*z*alphas))
+  #update error
+  ui = sum(alphas*y*k[i1,]) - b
+  uj = sum(alphas*y*k[j1,]) - b
+  #ui = x[i1,]%*%w - b
+  #uj = x[j1,]%*%w - b
+  error[i1] = ui - y[i1]
+  error[j1] = uj - y[j1]
+  result = list(val=1,alphas=alphas,error=error,   b=b)
+  return(result)
+}
+
+
+examineExample = function(j,k,y,  b,alphas,eps,tol,C,error,n){
+  yj = y[j]
+  alphaj = alphas[j]
+  #w = colSums(apply(x, 2, function(z) y*z*alphas))
+  #uj = x[j,]%*%w - b
+  uj = sum(alphas*y*k[j,])
+  Ej = uj - yj
+  rj = Ej*yj
+  if ((rj < -tol & alphaj < C) | (rj > tol & alphaj > 0)) {
+    # first heuristic: choose i that maximize abs(Ei -Ej), only select from suport vector
+    #pos = which(alphas != 0 | alphas != C)
+    pos = which(alphas>eps & alphas<(C-eps))
+    
+    #rest = which(!(alphas != 0 & alphas != C))
+    rest = which(!(alphas>eps & alphas<(C-eps)))
+    if (length(pos)>1) {
+      # select i from unbound max abs(Ej - Ei)
+      temp = matrix(0,nrow(alphas),1)
+      temp[pos] = abs(as.numeric(Ej) - error[pos])
+      i1 = which.max(temp)
+      heu1 = takeStep(i1, j, k=k,y=y,   b=b,alphas=alphas,eps=eps,C=C,error)
+      if (heu1$val) {
+        #w = heu1$w
+        alphas = heu1$alphas
+        error = heu1$error
+        b = heu1$b
+        n = n+1
+        print(cat('Iteration',n,'  heu1','  b',b))
+        result = list(val=1,alphas=alphas,error=error,b=b,n=n)
+        return(result)
+      }
+    }
+    
+    # second heuristic: loop over i from all SV
+    for (i1 in sample(pos,length(pos))) {
+      if (alphas[i1]>eps & alphas[i1]<(C-eps)) {
+        heu2 = takeStep(i1, j, k=k,y=y,b=b,alphas=alphas,eps=eps,C=C,error)
+        if (heu2$val){
+          #w = heu2$w
+          alphas = heu2$alphas
+          error = heu2$error
+          b = heu2$b
+          n = n+1
+          print(cat('Iteration',n,'  heu 2','  b',b))
+          result = list(val=1,alphas=alphas,error=error    ,b=b,n=n)
+          return(result)
+        }
+      }
+      
+    }
+    # third heuristic: loop through the rest of data set
+    #rest = which(!(alphas != 0 & alphas != C))
+    rest = which(!(alphas>eps & alphas<(C-eps)))
+    #print(cat('rest',length(rest)))
+    for (i1 in sample(rest,length(rest))) {
+      heu3 = takeStep(i1, j, k=k,y=y,    b=b,alphas=alphas,eps=eps,C=C,error)
+      if (heu3$val) {
+        #w = heu3$w
+        alphas = heu3$alphas
+        error = heu3$error
+        b = heu3$b
+        n = n+1
+        print(cat('Iteration',n,'  heu  3','  b',b))
+        result = list(val=1,alphas=alphas,error=error,    b=b,n=n)
+        return(result)
+      }
+    }
+  }
+  return(list(val=0,alphas=alphas,error=error,    b=b,n=n))
+}
+
+
+main = function(k,y,C,tol) {
+  #w = as.numeric(0)
+  n=0
+  alphas = matrix(0,nrow(k),1) #initial alphas
+  #w = colSums(apply(x, 2, function(z) y*z*alphas)) #in order to initial b
+  b = matrix(0,1,1) #initial b
+  error = matrix(0,nrow(k),1)
+  eps = 1e-3
+  numChanged = 0
+  examineAll = 1
+  while (numChanged > 0 | examineAll) {
+    numChanged = 0
+    if (examineAll) {
+      for (i0 in 1:nrow(k)) {
+        # loop through all data set
+        examA = examineExample(i0,k=k,y=y,   b=b,alphas=alphas,eps=eps,tol=tol,C=C,error=error,n=n)
+        numChanged = numChanged + examA$val
+        #w = examA$w
+        alphas = examA$alphas
+        error = examA$error
+        b = examA$b
+        n = examA$n
+      } 
+    } else {
+      unbound = which(alphas!=0 & alphas!=C)
+      #unbound = which(alphas>eps & alphas<(C-eps))
+      for (i0 in unbound) {
+        # loop through only the unbound data
+        examB = examineExample(i0,k=k,y=y,   b=b,alphas=alphas,eps=eps,tol=tol,C=C,error=error,n=n)
+        numChanged = numChanged + examB$val
+        #w = examB$w
+        alphas = examB$alphas
+        error = examB$error
+        b = examB$b
+        n = examB$n
+      }
+    }
+    
+    if (examineAll == 1) {
+      examineAll = 0
+    } else if (numChanged == 0) {
+      examineAll = 1
+    }
+  }
+  result = list(alphas=alphas,b=b)
+  return(result)
+}
+{% endhighlight %}
+
+
+## SMO Algorithm
+
+[SMO](http://en.wikipedia.org/wiki/Sequential_minimal_optimization) is an algotirhm for solving quadratic programming problem.  
+
+
+I Still working on a mathematic explanation for my SMO code.
+
+
+
+## Application
+
+### Linear Seperator
+
+Here is the plot of data.
+
+{% highlight r %}
+require(R.matlab)
+data = readMat('ex6data1.mat')
+X = data$X
+Y = data$y
+Y = replace(Y,Y==0,-1)
+
+x1 = X[Y==-1,]
+x2 = X[Y==1,]
+plot(x1, pch=1,col="blue",xlim=range(X[,1]),ylim=range(X[,2]))
+points(x2, pch=1,col="red")
+{% endhighlight %}
+
+![plot of chunk unnamed-chunk-2](/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-2-1.png) 
+
+We can find that there is a outlier in red points at top left corner. Should we consider this outlier or no? SVM is able to deal with this kind of situation.
+
+
+
+
+
+With different $C$, SVM will find different hyperplane to seperate the data:
+
+{% highlight r %}
+X1 = data1$X
+Y1 = data1$y
+Y1 = replace(Y1,Y1==0,-1)
+
+K1 = kernal_linear(X1)
+
+test1 = main(K1,y =Y1,C=1000,tol=0.01)
+alphas1=test1$alphas
+b1 = test1$b
+w1 = t(alphas1*Y1)%*%X1
+
+linearplot(X1,Y1,w1,b1,main="C=1000")
+{% endhighlight %}
+
+
+![plot of chunk unnamed-chunk-4](/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-4-1.png) 
+
+
+
+{% highlight r %}
+X1 = data1$X
+Y1 = data1$y
+Y1 = replace(Y1,Y1==0,-1)
+
+K1 = kernal_linear(X1)
+
+test1 = main(K1,y =Y1,C=1,tol=0.01)
+alphas1=test1$alphas
+b1 = test1$b
+w1 = t(alphas1*Y1)%*%X1
+
+linearplot(X1,Y1,w1,b1,main="C=1")
+{% endhighlight %}
+
+![plot of chunk unnamed-chunk-6](/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-6-1.png) 
+
+### Non-linear Seperator
+
+[Radial basis function kernel](http://en.wikipedia.org/wiki/Radial_basis_function_kernel) (RBF) has been used for non-linear seperator.
+
+Here is the data
+
+
+{% highlight r %}
+data2 = readMat('ex6data2.mat')
+X2 = data2$X
+Y2 = data2$y
+Y2 = replace(Y2,Y2==0,-1)
+plot(X2,cex=0.5,col=(3+Y2),xlim=range(X2[,1]),ylim=range(X2[,2]),xlab="",ylab="")
+{% endhighlight %}
+
+![plot of chunk unnamed-chunk-7](/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-7-1.png) 
+
+Train the data set with different $C$ and $\sigma$
+
+
+{% highlight r %}
+data2 = readMat('ex6data2.mat')
+X2 = data2$X
+Y2 = data2$y
+Y2 = replace(Y2,Y2==0,-1)
+K1 = kernal_RBF(X2,0.1)
+test1 = main(K2,y =Y2,C=1,tol=0.1)
+K2 = kernal_RBF(X2,0.029)
+test2 = main(K2,y =Y2,C=100,tol=0.1)
+{% endhighlight %}
+
+Here is the function to visulize the training result
+
+
+{% highlight r %}
+Predict = function(x,svalpha,svX,svY,sigma=0.1) {
+#   indx = alpha>0
+  x1 = rowSums(x^2)
+  sv1 = rowSums(svX^2)
+  temp = -2*x%*%t(svX)
+  k1 = apply(temp,1,function(z) z+sv1)
+  k = apply(t(k1),2,function(z) z+x1)
+  k = exp(-k/(2*sigma^2))
+  k1 = apply(k,1,function(z) z*svY)
+  k2 = apply(t(k1),1,function(z) z*svalpha)
+  K = t(k2)
+  K = rowSums(K)
+  K[K>=0] = 1
+  K[K<0] =-1
+  return(K)
+}
+
+gen_space = function(data,Y,alpha,l,sigma=0.1){
+  idx = alpha>0
+  x1plot = seq(min(data[,1]),max(data[,1]),(max(data[,1])-min(data[,1]))/(l-1))
+  x2plot = seq(min(data[,2]),max(data[,2]),(max(data[,2])-min(data[,2]))/(l-1))
+  xx1 = t(matrix(rep(x1plot,l),l,l))
+  xx2 = matrix(rep(x2plot,l),l,l)
+  
+  svX2 = data[idx,]
+  svY2 = Y[idx,]
+  svalphas2 = alpha[idx2,]
+  vals = matrix(0,nrow(xx1),ncol(xx2))
+  for(i in 1:ncol(xx1)) {
+    xx = cbind(xx1[,i],xx2[,i])
+    vals[i,] = Predict(xx,svalphas2,svX2,svY2,sigma=sigma)
+  }
+  return(list(x=x1plot,y=x2plot,z=vals))
+#   contour(x1plot,x2plot,vals,nlevels=nlevel,lty=lty)
+}
+{% endhighlight %}
+
+Visualize the two hyperplanes
+
+
+{% highlight r %}
+alphas2 = read.table("s0.1c1")
+space = gen_space(X2,Y2,alphas2,100)
+plot(X2,cex=0.5,col=(3+Y2),xlim=range(X2[,1]),ylim=range(X2[,2]),xlab="",ylab="",main="Non-linear seperator")
+contour(space$x,space$y,space$z,nlevels=1,lty=1,add=T,lwd=2,labels="sigma0.1 C1")
+
+alpha = read.table("s0.029c100")
+space1 = gen_space(X2,Y2,alpha,100,sigma=0.029)
+contour(space1$x,space1$y,space1$z,nlevels=1,lty=1,add=T,col=4,lwd=2,labels="sigma0.029 C100")
+{% endhighlight %}
+
+
+![plot of chunk unnamed-chunk-11](/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-11-1.png) 
+
+
+
+
+# Refference
+
+* Learning with Kernels: Support Vector Machines, Regularization, Optimization, and Beyond
+* The Elements of Statistical Learning, Data Mining, Inference, and Prediction
+* Sequential Minimal Optimization: A Fast Algorithm for Training Support Vector Machines, 1998, John C. Platt
+* Coursera [Stanford University Machine Learning](https://class.coursera.org/ml-006) online course
+* Edx [Learning From Data](https://courses.edx.org/courses/CaltechX/CS_1156x/3T2014/info) online course
+* [Free Mind Blog](http://blog.pluskid.org/?page_id=683)
