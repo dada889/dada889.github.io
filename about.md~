@@ -4,14 +4,13 @@ title: About
 permalink: /about/
 ---
 
-> 本人擅长Ai、Fw、Fl、Br、 Ae、Pr、Id、Ps 等软件的安装与卸载，精通CSS、Java脚本、 PHP、ASP、C、C＋＋、 C＃、Java、Ruby、 Perl、Lisp、python、 Objective－C、Action 脚本、Pascal等单词拼 写，熟悉Windows、Li nux、Mac、 Android、IOS、WP8等系统的 开关机         
+> 本人擅长Ai、Fw、Fl、Br、Ae、Pr、Id、PS等软件的安装与卸载，精通CSS、JavaScript、PHP、ASP、C、C＋＋、C#、Java、R、Ruby、Perl、Lisp、python、Objective-C、ActionScript、Pascal等单词的拼写，熟悉windows、Linux、Mac、Android、IOS等系统的开关机，欢迎咨询。         
 
+I am a heavy R user. Usually, I prefer to program my own algorithm ranther than use packages. While i still familiar with package like ggplot2, knitr, slidify, Shiny and rCharts. I also use Matlab/Octave and SAS for data analysis sometimes.
 
+On the other hand, I also have experience in python, JavaScript, CSS and HTML.
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+This blog is bulid on Github with a Jekyll theme. You can find the source code for this bolg at [my Github](https://github.com/dada889/dada889.github.io).
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
-
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
 
 <p class="rss-subscribe">subscribe me via<a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a></p>

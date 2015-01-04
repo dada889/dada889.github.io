@@ -6,14 +6,14 @@
 </description>
     <link>http://dada889.github.io/</link>
     <atom:link href="http://dada889.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 03 Jan 2015 23:47:35 +1300</pubDate>
-    <lastBuildDate>Sat, 03 Jan 2015 23:47:35 +1300</lastBuildDate>
+    <pubDate>Mon, 05 Jan 2015 10:05:05 +1300</pubDate>
+    <lastBuildDate>Mon, 05 Jan 2015 10:05:05 +1300</lastBuildDate>
     <generator>Jekyll v2.5.1</generator>
     
       <item>
         <title>Support-Vector-Machine</title>
         <description>&lt;h2 id=&quot;what-is-support-vecor-machine&quot;&gt;What is Support vecor machine&lt;/h2&gt;
-&lt;p&gt;According to &lt;a href=&quot;http://en.wikipedia.org/wiki/Support_vector_machine&quot;&gt;wikipedia&lt;/a&gt;, support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis.&lt;/p&gt;
+&lt;p&gt;According to &lt;a href=&quot;http://en.wikipedia.org/wiki/Support_vector_machine&quot;&gt;wikipedia&lt;/a&gt;, support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis. More formally, a support vector machine constructs a hyperplane or set of hyperplanes in a high- or infinite-dimensional space, which can be used for classification, regression, or other tasks. &lt;/p&gt;
 
 &lt;p&gt;SVMs were introduced by Vapnik in 1992, they often provide significantly better classfication performance than other machine learning algorithms on reasonably sized datasets.&lt;/p&gt;
 
