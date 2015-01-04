@@ -12,7 +12,7 @@ This article following the idea of [One Approach to Deriving a Model](https://gi
 
 ##Getting Start
 Let's load this two data (train and test) into R. I use empty space to replace the missing data.
-```{r, echo=FALSE}
+```{r, echo=T}
 setwd("/media/htt/Ha/MOOC/Kaggle/Titanic")
 train.column.types = c('integer', 'factor', 'factor', 'character', 'factor', 'numeric', 'integer', 'integer', 'character', 'numeric', 'character', 'factor')
 train = read.csv('train.csv', colClasses = train.column.types, na.strings = c(NA, ''))
@@ -29,10 +29,35 @@ head(train,n=3)
 
 
 See the distribution of missing data in training set.
-```{r, echo=FALSE}
+```{r, echo=T, message=F}
 require(Amelia)
 missmap(train,y.labels=seq(0,999,by=100),y.at=c(1,seq(0,999,by=100)), main="Missing data in training set")
 ```
+
+We can see most of the Cabin data and about 20% of Age data is missing. There is no much thing we can do to Cabin data. While for Age data, we can replace the missing age with some form of imputation. 
+
+
+
+
+
+ 
+
+
+Let's check the relationship between different variables:
+
+```{r, echo=T, message=F}
+barplot(table(train$Survived),
+        names.arg = c("Perished", "Survived"),
+        main="Survived (passenger fate)", col="black")
+mosaicplot(train$Pclass ~ train$Survived, 
+           main="Passenger Fate by Traveling Class", shade=FALSE, 
+           color=TRUE, xlab="Pclass", ylab="Survived")
+boxplot(train$Age ~ train$Pclass, main="Age and Class")
+
+```
+
+
+
 
 
 

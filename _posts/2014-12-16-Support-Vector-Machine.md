@@ -6,7 +6,7 @@ tags: [support vector machine, machine learning, SMO]
 ---
 
 ## What is Support vecor machine
-According to [wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine), support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis.
+According to [wikipedia](http://en.wikipedia.org/wiki/Support_vector_machine), support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis. More formally, a support vector machine constructs a hyperplane or set of hyperplanes in a high- or infinite-dimensional space, which can be used for classification, regression, or other tasks. 
 
 SVMs were introduced by Vapnik in 1992, they often provide significantly better classfication performance than other machine learning algorithms on reasonably sized datasets.
 
