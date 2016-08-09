@@ -89,7 +89,7 @@ MathJax.Hub.Config({
 
   <article class="post-content">
     <h2 id="what-is-support-vecor-machine">What is Support vecor machine</h2>
-<p>According to <a href="http://en.wikipedia.org/wiki/Support_vector_machine">wikipedia</a>, support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis. More formally, a support vector machine constructs a hyperplane or set of hyperplanes in a high- or infinite-dimensional space, which can be used for classification, regression, or other tasks. </p>
+<p>According to <a href="http://en.wikipedia.org/wiki/Support_vector_machine">wikipedia</a>, support vector machines (SVMs, also support vector networks) are supervised learning models with associated learning algorithms that analyze data and recognize patterns, used for classification and regression analysis. More formally, a support vector machine constructs a hyperplane or set of hyperplanes in a high- or infinite-dimensional space, which can be used for classification, regression, or other tasks.</p>
 
 <p>SVMs were introduced by Vapnik in 1992, they often provide significantly better classfication performance than other machine learning algorithms on reasonably sized datasets.</p>
 
@@ -97,284 +97,268 @@ MathJax.Hub.Config({
 
 <p>$X$ is the matrix of training data with $n$ rows and $d$ columns, $x_1,…,x_n \in \mathbb{R}^d$. Suppose given a dot product space $\mathcal{H}$, and $h(x)$ is a transformed feature vectors. We will have kernal data $h(x_1),….,h(x_n) \in \mathcal{H}$. Any hyperplane in $\mathcal{H}$ can be written as:</p>
 
-<script type="math/tex; mode=display">
-\{h(x) \in \mathcal{H} | w \cdot h(x) - b = 0 \}, w \in \mathcal{H}, b \in \mathbb{R}
-</script>
+<script type="math/tex; mode=display">\{h(x) \in \mathcal{H} | w \cdot h(x) - b = 0 \}, w \in \mathcal{H}, b \in \mathbb{R}</script>
 
 <p>Given a pair of ($w,b$), we have decision function for two class:</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-
 \begin{aligned}
         f(x) & =  w \cdot h(x) - b   &     & \\
  for:  & f(x_i) \geq 1 - \xi_i          & \hat{y_i} & = 1 \\
        & f(x_i) \leq -(1 - \xi_i)          & \hat{y_i} & = -1 \\
-\end{aligned}
- %]]></script>
+\end{aligned} %]]></script>
 
 <p>$\xi_i$ is non-negative slack variable. In order to find the hyperplane that creates the biggest margin between the two class $1$ and $-1$, we will keep $| w|$ as small as possible. We will choose $w$ and $b$ that minimize $| w|$ in condition of $y_if(x_i)\geq 1-\xi_i$ and $\xi_i\geq 0$ for all $i$. The optimization problem can be formulated with penalty term:</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-
 \begin{aligned}
  \underset{w,b}{\text{minimize}} & \frac{1}{2}\| w\|^2 +C\sum\limits_{i=1}^n\xi_i  &\\
  \text{subject to:}                     & y_if(x_i) + \xi_i -1 > 0                  &\forall i \\
                                  & \xi_i \geq 0                                    &\forall i
-\end{aligned}
- %]]></script>
+\end{aligned} %]]></script>
 
 <p>$C$ is a constant penalty value, if $C=\infty$, we would have perfect seperating case. This is a constrained optimization problem, and this problem can be solve by Lagrangian. The Lagrange (primal) function with lagrange multiplier $\alpha_i$ and $\mu_i$ are:</p>
 
-<script type="math/tex; mode=display">
-\mathcal{L}(w,b,\alpha,\mu) = \frac{1}{2}\|w\|^2 + C\sum\limits_{i=1}^n\xi_i - \sum\limits_{i=1}^n\alpha_i[y_if(x_i)+\xi_i -1] - \sum\limits_{i=1}^n\mu_i\xi_i
-</script>
+<script type="math/tex; mode=display">\mathcal{L}(w,b,\alpha,\mu) = \frac{1}{2}\|w\|^2 + C\sum\limits_{i=1}^n\xi_i - \sum\limits_{i=1}^n\alpha_i[y_if(x_i)+\xi_i -1] - \sum\limits_{i=1}^n\mu_i\xi_i</script>
 
 <p>We can minimize $\mathcal{L}$ with $w$ and $b$ to get the dual problem:</p>
 
 <p>$w$, $\xi_i$ and their Lagrange multipers can be cancel out in the Wolfe dual problem:</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-
 \begin{aligned}
  \underset{\alpha}{\text{maximize}} & \mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jh(x_i)^Th(x_j) &\\
  \text{subject to:}                     & 0\leq \alpha_i \leq C                  &\forall i \\
                                  & \sum\limits_{i=1}^n \alpha_iy_i = 0                                    &\forall i
-\end{aligned}
- %]]></script>
+\end{aligned} %]]></script>
 
 <p>Which gives the lower bound of $\mathcal{L}$ for any fesible point. We maximize $\mathcal{L}$ subject to $0\leq \alpha\leq C$ and $\sum_{i=1}^n\alpha_i y_i=0$ under the KKT(Karush-Kuhn-Tucker) conditions:</p>
 
 <script type="math/tex; mode=display">% <![CDATA[
-
 \begin{aligned}
    \alpha_i=0 & \Rightarrow & y_if(x_i)\leq 1 \\
 0<\alpha_i<C  & \Rightarrow & y_if(x_i)= 1 \\
    \alpha_i=C & \Rightarrow & y_if(x_i)\geq 1
-\end{aligned}
- %]]></script>
+\end{aligned} %]]></script>
 
 <p>The inner product of $h(x_i)^T$ and $h(x_j)$ can be written $\langle h(x_i),h(x_j)\rangle$. We can use kernel function:</p>
 
-<script type="math/tex; mode=display">
-K(x_i,x_j)=\langle h(x_i),h(x_j)\rangle
-</script>
+<script type="math/tex; mode=display">K(x_i,x_j)=\langle h(x_i),h(x_j)\rangle</script>
 
-<script type="math/tex; mode=display">
-\mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jK(x_i,x_j)
-</script>
+<script type="math/tex; mode=display">\mathcal{L}_D(\alpha) =\sum\limits_{i=1}^n\alpha_i -\frac{1}{2}\sum\limits_{i=1}^n \sum\limits_{j=1}^n \alpha_i\alpha_jy_iy_jK(x_i,x_j)</script>
 
 <p>SMO(Sequential minimal optimization) can be used to maximize $\mathcal{L}_D(\alpha)$, here is the SMO optimization R code for the above optimization problem:</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">takeStep <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>i1<span class="p">,</span> j1<span class="p">,</span> k<span class="p">,</span>y<span class="p">,</span>  b<span class="p">,</span>alphas<span class="p">,</span>eps<span class="p">,</span>C<span class="p">,</span>error<span class="p">)</span> <span class="p">{</span>
-  <span class="kr">if</span> <span class="p">(</span>i1 <span class="o">==</span> j1<span class="p">)</span> <span class="p">{</span>
-    <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">0</span><span class="p">))</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">takeStep</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">j1</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="p">,</span>  <span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">i1</span> <span class="o">==</span> <span class="n">j1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
   <span class="p">}</span>
-  alphai <span class="o">=</span> alphas<span class="p">[</span>i1<span class="p">]</span>
-  alphaj <span class="o">=</span> alphas<span class="p">[</span>j1<span class="p">]</span>
-  yi <span class="o">=</span> y<span class="p">[</span>i1<span class="p">]</span>
-  yj <span class="o">=</span> y<span class="p">[</span>j1<span class="p">]</span>
-  ui <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>alphas<span class="o">*</span>y<span class="o">*</span>k<span class="p">[</span>i1<span class="p">,])</span> <span class="o">-</span> b
-  uj <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>alphas<span class="o">*</span>y<span class="o">*</span>k<span class="p">[</span>j1<span class="p">,])</span> <span class="o">-</span> b
-<span class="c1">#   ui = x[i1,]%*%w - b</span>
-<span class="c1">#   uj = x[j1,]%*%w - b</span>
-  Ei <span class="o">=</span> ui <span class="o">-</span> yi
-  Ej <span class="o">=</span> uj <span class="o">-</span> yj
+  <span class="n">alphai</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+  <span class="n">alphaj</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+  <span class="n">yi</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+  <span class="n">yj</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+  <span class="n">ui</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">alphas</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,])</span> <span class="o">-</span> <span class="n">b</span>
+  <span class="n">uj</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">alphas</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">j1</span><span class="p">,])</span> <span class="o">-</span> <span class="n">b</span>
+<span class="c1">#   ui = x[i1,]%*%w - b
+#   uj = x[j1,]%*%w - b
+</span>  <span class="n">Ei</span> <span class="o">=</span> <span class="n">ui</span> <span class="o">-</span> <span class="n">yi</span>
+  <span class="n">Ej</span> <span class="o">=</span> <span class="n">uj</span> <span class="o">-</span> <span class="n">yj</span>
   
-  <span class="c1">#compute H and L use old alpha i and j</span>
-  <span class="kr">if</span><span class="p">(</span>y<span class="p">[</span>i1<span class="p">]</span> <span class="o">==</span> y<span class="p">[</span>j1<span class="p">])</span> <span class="p">{</span>
-    L <span class="o">=</span> <span class="kp">max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> alphas<span class="p">[</span>j1<span class="p">]</span> <span class="o">+</span> alphas<span class="p">[</span>i1<span class="p">]</span> <span class="o">-</span> C<span class="p">)</span>
-    H <span class="o">=</span> <span class="kp">min</span><span class="p">(</span>C<span class="p">,</span>alphas<span class="p">[</span>i1<span class="p">]</span> <span class="o">+</span> alphas<span class="p">[</span>j1<span class="p">])</span>
-  <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-    L <span class="o">=</span> <span class="kp">max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> alphas<span class="p">[</span>j1<span class="p">]</span> <span class="o">-</span> alphas<span class="p">[</span>i1<span class="p">])</span>
-    H <span class="o">=</span> <span class="kp">min</span><span class="p">(</span>C<span class="p">,</span> C <span class="o">+</span> alphas<span class="p">[</span>j1<span class="p">]</span> <span class="o">-</span> alphas<span class="p">[</span>i1<span class="p">])</span>
+  <span class="c1">#compute H and L use old alpha i and j
+</span>  <span class="k">if</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">])</span> <span class="p">{</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">-</span> <span class="n">C</span><span class="p">)</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">C</span><span class="p">,</span><span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">+</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">])</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span>
+    <span class="n">H</span> <span class="o">=</span> <span class="n">min</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">C</span> <span class="o">+</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span>
   <span class="p">}</span>
-  <span class="kr">if</span> <span class="p">(</span>L <span class="o">==</span> H<span class="p">)</span> <span class="p">{</span>
-    <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">0</span><span class="p">))</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">L</span> <span class="o">==</span> <span class="n">H</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
   <span class="p">}</span>
-  eta <span class="o">=</span> <span class="m">2</span><span class="o">*</span>k<span class="p">[</span>i1<span class="p">,</span>j1<span class="p">]</span> <span class="o">-</span> k<span class="p">[</span>i1<span class="p">,</span>i1<span class="p">]</span> <span class="o">-</span> k<span class="p">[</span>j1<span class="p">,</span>j1<span class="p">]</span>
+  <span class="n">eta</span> <span class="o">=</span> <span class="m">2</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span><span class="n">j1</span><span class="p">]</span> <span class="o">-</span> <span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span><span class="n">i1</span><span class="p">]</span> <span class="o">-</span> <span class="n">k</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span><span class="n">j1</span><span class="p">]</span>
   
   
-  <span class="c1">#compute new alpha j and i as alphaj and alphai</span>
-  <span class="kr">if</span> <span class="p">(</span>eta <span class="o">&lt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-    alphaj <span class="o">=</span> alphaj <span class="o">-</span> yj<span class="o">*</span><span class="p">(</span>Ei <span class="o">-</span> Ej<span class="p">)</span><span class="o">/</span>eta
-    <span class="kr">if</span> <span class="p">(</span>alphaj <span class="o">&lt;</span> L<span class="p">)</span> <span class="p">{</span>
-      alphaj <span class="o">=</span> L
-    <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>alphaj <span class="o">&gt;</span> H<span class="p">)</span> <span class="p">{</span>
-      alphaj <span class="o">=</span> H
+  <span class="c1">#compute new alpha j and i as alphaj and alphai
+</span>  <span class="k">if</span> <span class="p">(</span><span class="n">eta</span> <span class="o">&lt;</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alphaj</span> <span class="o">=</span> <span class="n">alphaj</span> <span class="o">-</span> <span class="n">yj</span><span class="o">*</span><span class="p">(</span><span class="n">Ei</span> <span class="o">-</span> <span class="n">Ej</span><span class="p">)</span><span class="o">/</span><span class="n">eta</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">alphaj</span> <span class="o">&lt;</span> <span class="n">L</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alphaj</span> <span class="o">=</span> <span class="n">L</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">alphaj</span> <span class="o">&gt;</span> <span class="n">H</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alphaj</span> <span class="o">=</span> <span class="n">H</span>
     <span class="p">}</span>
-  <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-    Lobj <span class="o">=</span> objfun<span class="p">(</span>alphas<span class="p">,</span>j1<span class="p">,</span>L<span class="p">,</span>y<span class="p">,</span>k<span class="p">)</span>
-    Hobj <span class="o">=</span> objfun<span class="p">(</span>alphas<span class="p">,</span>j1<span class="p">,</span>H<span class="p">,</span>y<span class="p">,</span>k<span class="p">)</span>
-    <span class="kr">if</span> <span class="p">(</span>Lobj <span class="o">&gt;</span> Hobj <span class="o">+</span> eps<span class="p">){</span>
-      alphaj <span class="o">=</span> L
-    <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>Lobj <span class="o">&lt;</span> Hobj <span class="o">-</span> eps<span class="p">)</span> <span class="p">{</span>
-      alphaj <span class="o">=</span> H
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">Lobj</span> <span class="o">=</span> <span class="n">objfun</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span><span class="n">j1</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">Hobj</span> <span class="o">=</span> <span class="n">objfun</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span><span class="n">j1</span><span class="p">,</span><span class="n">H</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Lobj</span> <span class="o">&gt;</span> <span class="n">Hobj</span> <span class="o">+</span> <span class="n">eps</span><span class="p">){</span>
+      <span class="n">alphaj</span> <span class="o">=</span> <span class="n">L</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Lobj</span> <span class="o">&lt;</span> <span class="n">Hobj</span> <span class="o">-</span> <span class="n">eps</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">alphaj</span> <span class="o">=</span> <span class="n">H</span>
     <span class="p">}</span> 
   <span class="p">}</span>
-  <span class="kr">if</span> <span class="p">(</span>alphaj <span class="o">&lt;</span> <span class="m">1e-8</span><span class="p">)</span> <span class="p">{</span>
-    alphaj <span class="o">=</span> <span class="m">0</span>
-  <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>alphaj <span class="o">&gt;</span> C<span class="m">-1e-8</span><span class="p">)</span> <span class="p">{</span>
-    alphaj <span class="o">=</span> C
+  <span class="k">if</span> <span class="p">(</span><span class="n">alphaj</span> <span class="o">&lt;</span> <span class="m">1e-8</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alphaj</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">alphaj</span> <span class="o">&gt;</span> <span class="n">C</span><span class="m">-1e-8</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">alphaj</span> <span class="o">=</span> <span class="n">C</span>
   <span class="p">}</span>
-  <span class="kr">if</span> <span class="p">(</span><span class="kp">abs</span><span class="p">(</span>alphaj <span class="o">-</span> alphas<span class="p">[</span>j1<span class="p">])</span> <span class="o">&lt;</span> eps<span class="o">*</span><span class="p">(</span>alphaj<span class="o">+</span>alphas<span class="p">[</span>j1<span class="p">]</span><span class="o">+</span>eps<span class="p">))</span> <span class="p">{</span>
-    <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">0</span><span class="p">))</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">alphaj</span> <span class="o">-</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">eps</span><span class="o">*</span><span class="p">(</span><span class="n">alphaj</span><span class="o">+</span><span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">+</span><span class="n">eps</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">0</span><span class="p">))</span>
   <span class="p">}</span>
-  alphai <span class="o">=</span> alphas<span class="p">[</span>i1<span class="p">]</span><span class="o">+</span>y<span class="p">[</span>i1<span class="p">]</span><span class="o">*</span>y<span class="p">[</span>j1<span class="p">]</span><span class="o">*</span><span class="p">(</span>alphas<span class="p">[</span>j1<span class="p">]</span><span class="o">-</span>alphaj<span class="p">)</span>
+  <span class="n">alphai</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">+</span><span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">-</span><span class="n">alphaj</span><span class="p">)</span>
   
   
-  <span class="c1">#compute new b and assign</span>
-  b1 <span class="o">=</span> b <span class="o">+</span> Ei <span class="o">+</span> y<span class="p">[</span>i1<span class="p">]</span><span class="o">*</span><span class="p">(</span>alphai<span class="o">-</span>alphas<span class="p">[</span>i1<span class="p">])</span><span class="o">*</span>k<span class="p">[</span>i1<span class="p">,</span>i1<span class="p">]</span> <span class="o">+</span> y<span class="p">[</span>j1<span class="p">]</span><span class="o">*</span><span class="p">(</span>alphaj<span class="o">-</span>alphas<span class="p">[</span>j1<span class="p">])</span><span class="o">*</span>k<span class="p">[</span>i1<span class="p">,</span>j1<span class="p">]</span>
-  b2 <span class="o">=</span> b <span class="o">+</span> Ej <span class="o">+</span> y<span class="p">[</span>i1<span class="p">]</span><span class="o">*</span><span class="p">(</span>alphai<span class="o">-</span>alphas<span class="p">[</span>i1<span class="p">])</span><span class="o">*</span>k<span class="p">[</span>i1<span class="p">,</span>j1<span class="p">]</span> <span class="o">+</span> y<span class="p">[</span>j1<span class="p">]</span><span class="o">*</span><span class="p">(</span>alphaj<span class="o">-</span>alphas<span class="p">[</span>j1<span class="p">])</span><span class="o">*</span>k<span class="p">[</span>j1<span class="p">,</span>j1<span class="p">]</span>
-  <span class="c1"># update b</span>
-  <span class="kr">if</span> <span class="p">(</span>alphas<span class="p">[</span>i1<span class="p">]</span><span class="o">&gt;</span><span class="m">0</span> <span class="o">&amp;</span> alphas<span class="p">[</span>i1<span class="p">]</span><span class="o">&lt;</span>C<span class="p">)</span> <span class="p">{</span>
-    b <span class="o">=</span> b1
-  <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>alphas<span class="p">[</span>j1<span class="p">]</span><span class="o">&gt;</span><span class="m">0</span> <span class="o">&amp;</span> alphas<span class="p">[</span>j1<span class="p">]</span><span class="o">&lt;</span>C<span class="p">)</span> <span class="p">{</span>
-    b <span class="o">=</span> b2
-  <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-    b <span class="o">=</span> <span class="p">(</span>b1<span class="o">+</span>b2<span class="p">)</span><span class="o">/</span><span class="m">2</span>
+  <span class="c1">#compute new b and assign
+</span>  <span class="n">b1</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">Ei</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">alphai</span><span class="o">-</span><span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span><span class="n">i1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">alphaj</span><span class="o">-</span><span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">])</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span><span class="n">j1</span><span class="p">]</span>
+  <span class="n">b2</span> <span class="o">=</span> <span class="n">b</span> <span class="o">+</span> <span class="n">Ej</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">alphai</span><span class="o">-</span><span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">])</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,</span><span class="n">j1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">alphaj</span><span class="o">-</span><span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">])</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">j1</span><span class="p">,</span><span class="n">j1</span><span class="p">]</span>
+  <span class="c1"># update b
+</span>  <span class="k">if</span> <span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">&gt;</span><span class="m">0</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">&lt;</span><span class="n">C</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b1</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">&gt;</span><span class="m">0</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span><span class="o">&lt;</span><span class="n">C</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">b2</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">b1</span><span class="o">+</span><span class="n">b2</span><span class="p">)</span><span class="o">/</span><span class="m">2</span>
   <span class="p">}</span>
   
-  <span class="c1">#assign new alpha i and j to alphas</span>
-  alphas<span class="p">[</span>i1<span class="p">]</span> <span class="o">=</span> alphai
-  alphas<span class="p">[</span>j1<span class="p">]</span> <span class="o">=</span> alphaj
+  <span class="c1">#assign new alpha i and j to alphas
+</span>  <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">=</span> <span class="n">alphai</span>
+  <span class="n">alphas</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">alphaj</span>
   
-  <span class="c1">#update new weight vector</span>
-  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas))</span>
-  <span class="c1">#update error</span>
-  ui <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>alphas<span class="o">*</span>y<span class="o">*</span>k<span class="p">[</span>i1<span class="p">,])</span> <span class="o">-</span> b
-  uj <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>alphas<span class="o">*</span>y<span class="o">*</span>k<span class="p">[</span>j1<span class="p">,])</span> <span class="o">-</span> b
-  <span class="c1">#ui = x[i1,]%*%w - b</span>
-  <span class="c1">#uj = x[j1,]%*%w - b</span>
-  error<span class="p">[</span>i1<span class="p">]</span> <span class="o">=</span> ui <span class="o">-</span> y<span class="p">[</span>i1<span class="p">]</span>
-  error<span class="p">[</span>j1<span class="p">]</span> <span class="o">=</span> uj <span class="o">-</span> y<span class="p">[</span>j1<span class="p">]</span>
-  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">1</span><span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>   b<span class="o">=</span>b<span class="p">)</span>
-  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+  <span class="c1">#update new weight vector
+</span>  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas))
+</span>  <span class="c1">#update error
+</span>  <span class="n">ui</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">alphas</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">i1</span><span class="p">,])</span> <span class="o">-</span> <span class="n">b</span>
+  <span class="n">uj</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">alphas</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">j1</span><span class="p">,])</span> <span class="o">-</span> <span class="n">b</span>
+  <span class="c1">#ui = x[i1,]%*%w - b
+</span>  <span class="c1">#uj = x[j1,]%*%w - b
+</span>  <span class="n">error</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ui</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span>
+  <span class="n">error</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span> <span class="o">=</span> <span class="n">uj</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">j1</span><span class="p">]</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>   <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 <span class="p">}</span>
 
 
-examineExample <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>j<span class="p">,</span>k<span class="p">,</span>y<span class="p">,</span>  b<span class="p">,</span>alphas<span class="p">,</span>eps<span class="p">,</span>tol<span class="p">,</span>C<span class="p">,</span>error<span class="p">,</span>n<span class="p">){</span>
-  yj <span class="o">=</span> y<span class="p">[</span>j<span class="p">]</span>
-  alphaj <span class="o">=</span> alphas<span class="p">[</span>j<span class="p">]</span>
-  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas))</span>
-  <span class="c1">#uj = x[j,]%*%w - b</span>
-  uj <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>alphas<span class="o">*</span>y<span class="o">*</span>k<span class="p">[</span>j<span class="p">,])</span>
-  Ej <span class="o">=</span> uj <span class="o">-</span> yj
-  rj <span class="o">=</span> Ej<span class="o">*</span>yj
-  <span class="kr">if</span> <span class="p">((</span>rj <span class="o">&lt;</span> <span class="o">-</span>tol <span class="o">&amp;</span> alphaj <span class="o">&lt;</span> C<span class="p">)</span> <span class="o">|</span> <span class="p">(</span>rj <span class="o">&gt;</span> tol <span class="o">&amp;</span> alphaj <span class="o">&gt;</span> <span class="m">0</span><span class="p">))</span> <span class="p">{</span>
-    <span class="c1"># first heuristic: choose i that maximize abs(Ei -Ej), only select from suport vector</span>
-    <span class="c1">#pos = which(alphas != 0 | alphas != C)</span>
-    pos <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>alphas<span class="o">&gt;</span>eps <span class="o">&amp;</span> alphas<span class="o">&lt;</span><span class="p">(</span>C<span class="o">-</span>eps<span class="p">))</span>
+<span class="n">examineExample</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="p">,</span>  <span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="p">,</span><span class="n">tol</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="p">,</span><span class="n">n</span><span class="p">){</span>
+  <span class="n">yj</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+  <span class="n">alphaj</span> <span class="o">=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas))
+</span>  <span class="c1">#uj = x[j,]%*%w - b
+</span>  <span class="n">uj</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">alphas</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">j</span><span class="p">,])</span>
+  <span class="n">Ej</span> <span class="o">=</span> <span class="n">uj</span> <span class="o">-</span> <span class="n">yj</span>
+  <span class="n">rj</span> <span class="o">=</span> <span class="n">Ej</span><span class="o">*</span><span class="n">yj</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">rj</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">tol</span> <span class="o">&amp;</span> <span class="n">alphaj</span> <span class="o">&lt;</span> <span class="n">C</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">rj</span> <span class="o">&gt;</span> <span class="n">tol</span> <span class="o">&amp;</span> <span class="n">alphaj</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">))</span> <span class="p">{</span>
+    <span class="c1"># first heuristic: choose i that maximize abs(Ei -Ej), only select from suport vector
+</span>    <span class="c1">#pos = which(alphas != 0 | alphas != C)
+</span>    <span class="n">pos</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">alphas</span><span class="o">&gt;</span><span class="n">eps</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="o">&lt;</span><span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">eps</span><span class="p">))</span>
     
-    <span class="c1">#rest = which(!(alphas != 0 &amp; alphas != C))</span>
-    rest <span class="o">=</span> <span class="kp">which</span><span class="p">(</span><span class="o">!</span><span class="p">(</span>alphas<span class="o">&gt;</span>eps <span class="o">&amp;</span> alphas<span class="o">&lt;</span><span class="p">(</span>C<span class="o">-</span>eps<span class="p">)))</span>
-    <span class="kr">if</span> <span class="p">(</span><span class="kp">length</span><span class="p">(</span>pos<span class="p">)</span><span class="o">&gt;</span><span class="m">1</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1"># select i from unbound max abs(Ej - Ei)</span>
-      temp <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>alphas<span class="p">),</span><span class="m">1</span><span class="p">)</span>
-      temp<span class="p">[</span>pos<span class="p">]</span> <span class="o">=</span> <span class="kp">abs</span><span class="p">(</span><span class="kp">as.numeric</span><span class="p">(</span>Ej<span class="p">)</span> <span class="o">-</span> error<span class="p">[</span>pos<span class="p">])</span>
-      i1 <span class="o">=</span> <span class="kp">which.max</span><span class="p">(</span>temp<span class="p">)</span>
-      heu1 <span class="o">=</span> takeStep<span class="p">(</span>i1<span class="p">,</span> j<span class="p">,</span> k<span class="o">=</span>k<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>   b<span class="o">=</span>b<span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>eps<span class="o">=</span>eps<span class="p">,</span>C<span class="o">=</span>C<span class="p">,</span>error<span class="p">)</span>
-      <span class="kr">if</span> <span class="p">(</span>heu1<span class="o">$</span>val<span class="p">)</span> <span class="p">{</span>
-        <span class="c1">#w = heu1$w</span>
-        alphas <span class="o">=</span> heu1<span class="o">$</span>alphas
-        error <span class="o">=</span> heu1<span class="o">$</span>error
-        b <span class="o">=</span> heu1<span class="o">$</span>b
-        n <span class="o">=</span> n<span class="m">+1</span>
-        <span class="kp">print</span><span class="p">(</span><span class="kp">cat</span><span class="p">(</span><span class="s">&#39;Iteration&#39;</span><span class="p">,</span>n<span class="p">,</span><span class="s">&#39;  heu1&#39;</span><span class="p">,</span><span class="s">&#39;  b&#39;</span><span class="p">,</span>b<span class="p">))</span>
-        result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">1</span><span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>b<span class="o">=</span>b<span class="p">,</span>n<span class="o">=</span>n<span class="p">)</span>
-        <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+    <span class="c1">#rest = which(!(alphas != 0 &amp; alphas != C))
+</span>    <span class="n">rest</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">alphas</span><span class="o">&gt;</span><span class="n">eps</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="o">&lt;</span><span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">eps</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span><span class="o">&gt;</span><span class="m">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="c1"># select i from unbound max abs(Ej - Ei)
+</span>      <span class="n">temp</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">alphas</span><span class="p">),</span><span class="m">1</span><span class="p">)</span>
+      <span class="n">temp</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">as.numeric</span><span class="p">(</span><span class="n">Ej</span><span class="p">)</span> <span class="o">-</span> <span class="n">error</span><span class="p">[</span><span class="n">pos</span><span class="p">])</span>
+      <span class="n">i1</span> <span class="o">=</span> <span class="n">which.max</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+      <span class="n">heu1</span> <span class="o">=</span> <span class="n">takeStep</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>   <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">heu1</span><span class="o">$</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">#w = heu1$w
+</span>        <span class="n">alphas</span> <span class="o">=</span> <span class="n">heu1</span><span class="o">$</span><span class="n">alphas</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">heu1</span><span class="o">$</span><span class="n">error</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">heu1</span><span class="o">$</span><span class="n">b</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="m">+1</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">'Iteration'</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="s1">'  heu1'</span><span class="p">,</span><span class="s1">'  b'</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="p">}</span>
     
-    <span class="c1"># second heuristic: loop over i from all SV</span>
-    <span class="kr">for</span> <span class="p">(</span>i1 <span class="kr">in</span> <span class="kp">sample</span><span class="p">(</span>pos<span class="p">,</span><span class="kp">length</span><span class="p">(</span>pos<span class="p">)))</span> <span class="p">{</span>
-      <span class="kr">if</span> <span class="p">(</span>alphas<span class="p">[</span>i1<span class="p">]</span><span class="o">&gt;</span>eps <span class="o">&amp;</span> alphas<span class="p">[</span>i1<span class="p">]</span><span class="o">&lt;</span><span class="p">(</span>C<span class="o">-</span>eps<span class="p">))</span> <span class="p">{</span>
-        heu2 <span class="o">=</span> takeStep<span class="p">(</span>i1<span class="p">,</span> j<span class="p">,</span> k<span class="o">=</span>k<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>b<span class="o">=</span>b<span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>eps<span class="o">=</span>eps<span class="p">,</span>C<span class="o">=</span>C<span class="p">,</span>error<span class="p">)</span>
-        <span class="kr">if</span> <span class="p">(</span>heu2<span class="o">$</span>val<span class="p">){</span>
-          <span class="c1">#w = heu2$w</span>
-          alphas <span class="o">=</span> heu2<span class="o">$</span>alphas
-          error <span class="o">=</span> heu2<span class="o">$</span>error
-          b <span class="o">=</span> heu2<span class="o">$</span>b
-          n <span class="o">=</span> n<span class="m">+1</span>
-          <span class="kp">print</span><span class="p">(</span><span class="kp">cat</span><span class="p">(</span><span class="s">&#39;Iteration&#39;</span><span class="p">,</span>n<span class="p">,</span><span class="s">&#39;  heu 2&#39;</span><span class="p">,</span><span class="s">&#39;  b&#39;</span><span class="p">,</span>b<span class="p">))</span>
-          result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">1</span><span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>error<span class="o">=</span>error    <span class="p">,</span>b<span class="o">=</span>b<span class="p">,</span>n<span class="o">=</span>n<span class="p">)</span>
-          <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+    <span class="c1"># second heuristic: loop over i from all SV
+</span>    <span class="k">for</span> <span class="p">(</span><span class="n">i1</span> <span class="k">in</span> <span class="n">sample</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span><span class="n">length</span><span class="p">(</span><span class="n">pos</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">eps</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i1</span><span class="p">]</span><span class="o">&lt;</span><span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">eps</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">heu2</span> <span class="o">=</span> <span class="n">takeStep</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">heu2</span><span class="o">$</span><span class="n">val</span><span class="p">){</span>
+          <span class="c1">#w = heu2$w
+</span>          <span class="n">alphas</span> <span class="o">=</span> <span class="n">heu2</span><span class="o">$</span><span class="n">alphas</span>
+          <span class="n">error</span> <span class="o">=</span> <span class="n">heu2</span><span class="o">$</span><span class="n">error</span>
+          <span class="n">b</span> <span class="o">=</span> <span class="n">heu2</span><span class="o">$</span><span class="n">b</span>
+          <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="m">+1</span>
+          <span class="n">print</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">'Iteration'</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="s1">'  heu 2'</span><span class="p">,</span><span class="s1">'  b'</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+          <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span>    <span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+          <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
         <span class="p">}</span>
       <span class="p">}</span>
       
     <span class="p">}</span>
-    <span class="c1"># third heuristic: loop through the rest of data set</span>
-    <span class="c1">#rest = which(!(alphas != 0 &amp; alphas != C))</span>
-    rest <span class="o">=</span> <span class="kp">which</span><span class="p">(</span><span class="o">!</span><span class="p">(</span>alphas<span class="o">&gt;</span>eps <span class="o">&amp;</span> alphas<span class="o">&lt;</span><span class="p">(</span>C<span class="o">-</span>eps<span class="p">)))</span>
-    <span class="c1">#print(cat(&#39;rest&#39;,length(rest)))</span>
-    <span class="kr">for</span> <span class="p">(</span>i1 <span class="kr">in</span> <span class="kp">sample</span><span class="p">(</span>rest<span class="p">,</span><span class="kp">length</span><span class="p">(</span>rest<span class="p">)))</span> <span class="p">{</span>
-      heu3 <span class="o">=</span> takeStep<span class="p">(</span>i1<span class="p">,</span> j<span class="p">,</span> k<span class="o">=</span>k<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>    b<span class="o">=</span>b<span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>eps<span class="o">=</span>eps<span class="p">,</span>C<span class="o">=</span>C<span class="p">,</span>error<span class="p">)</span>
-      <span class="kr">if</span> <span class="p">(</span>heu3<span class="o">$</span>val<span class="p">)</span> <span class="p">{</span>
-        <span class="c1">#w = heu3$w</span>
-        alphas <span class="o">=</span> heu3<span class="o">$</span>alphas
-        error <span class="o">=</span> heu3<span class="o">$</span>error
-        b <span class="o">=</span> heu3<span class="o">$</span>b
-        n <span class="o">=</span> n<span class="m">+1</span>
-        <span class="kp">print</span><span class="p">(</span><span class="kp">cat</span><span class="p">(</span><span class="s">&#39;Iteration&#39;</span><span class="p">,</span>n<span class="p">,</span><span class="s">&#39;  heu  3&#39;</span><span class="p">,</span><span class="s">&#39;  b&#39;</span><span class="p">,</span>b<span class="p">))</span>
-        result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">1</span><span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>    b<span class="o">=</span>b<span class="p">,</span>n<span class="o">=</span>n<span class="p">)</span>
-        <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
+    <span class="c1"># third heuristic: loop through the rest of data set
+</span>    <span class="c1">#rest = which(!(alphas != 0 &amp; alphas != C))
+</span>    <span class="n">rest</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">alphas</span><span class="o">&gt;</span><span class="n">eps</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="o">&lt;</span><span class="p">(</span><span class="n">C</span><span class="o">-</span><span class="n">eps</span><span class="p">)))</span>
+    <span class="c1">#print(cat('rest',length(rest)))
+</span>    <span class="k">for</span> <span class="p">(</span><span class="n">i1</span> <span class="k">in</span> <span class="n">sample</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span><span class="n">length</span><span class="p">(</span><span class="n">rest</span><span class="p">)))</span> <span class="p">{</span>
+      <span class="n">heu3</span> <span class="o">=</span> <span class="n">takeStep</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>    <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">heu3</span><span class="o">$</span><span class="n">val</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">#w = heu3$w
+</span>        <span class="n">alphas</span> <span class="o">=</span> <span class="n">heu3</span><span class="o">$</span><span class="n">alphas</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">heu3</span><span class="o">$</span><span class="n">error</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">heu3</span><span class="o">$</span><span class="n">b</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="m">+1</span>
+        <span class="n">print</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">'Iteration'</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="s1">'  heu  3'</span><span class="p">,</span><span class="s1">'  b'</span><span class="p">,</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>    <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
-  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>val<span class="o">=</span><span class="m">0</span><span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>    b<span class="o">=</span>b<span class="p">,</span>n<span class="o">=</span>n<span class="p">))</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">val</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span>    <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">))</span>
 <span class="p">}</span>
 
 
-main <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>k<span class="p">,</span>y<span class="p">,</span>C<span class="p">,</span>tol<span class="p">)</span> <span class="p">{</span>
-  <span class="c1">#w = as.numeric(0)</span>
-  n<span class="o">=</span><span class="m">0</span>
-  alphas <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>k<span class="p">),</span><span class="m">1</span><span class="p">)</span> <span class="c1">#initial alphas</span>
-  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas)) #in order to initial b</span>
-  b <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="c1">#initial b</span>
-  error <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>k<span class="p">),</span><span class="m">1</span><span class="p">)</span>
-  eps <span class="o">=</span> <span class="m">1e-3</span>
-  numChanged <span class="o">=</span> <span class="m">0</span>
-  examineAll <span class="o">=</span> <span class="m">1</span>
-  <span class="kr">while</span> <span class="p">(</span>numChanged <span class="o">&gt;</span> <span class="m">0</span> <span class="o">|</span> examineAll<span class="p">)</span> <span class="p">{</span>
-    numChanged <span class="o">=</span> <span class="m">0</span>
-    <span class="kr">if</span> <span class="p">(</span>examineAll<span class="p">)</span> <span class="p">{</span>
-      <span class="kr">for</span> <span class="p">(</span>i0 <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>k<span class="p">))</span> <span class="p">{</span>
-        <span class="c1"># loop through all data set</span>
-        examA <span class="o">=</span> examineExample<span class="p">(</span>i0<span class="p">,</span>k<span class="o">=</span>k<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>   b<span class="o">=</span>b<span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>eps<span class="o">=</span>eps<span class="p">,</span>tol<span class="o">=</span>tol<span class="p">,</span>C<span class="o">=</span>C<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>n<span class="o">=</span>n<span class="p">)</span>
-        numChanged <span class="o">=</span> numChanged <span class="o">+</span> examA<span class="o">$</span>val
-        <span class="c1">#w = examA$w</span>
-        alphas <span class="o">=</span> examA<span class="o">$</span>alphas
-        error <span class="o">=</span> examA<span class="o">$</span>error
-        b <span class="o">=</span> examA<span class="o">$</span>b
-        n <span class="o">=</span> examA<span class="o">$</span>n
+<span class="n">main</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">tol</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">#w = as.numeric(0)
+</span>  <span class="n">n</span><span class="o">=</span><span class="m">0</span>
+  <span class="n">alphas</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">k</span><span class="p">),</span><span class="m">1</span><span class="p">)</span> <span class="c1">#initial alphas
+</span>  <span class="c1">#w = colSums(apply(x, 2, function(z) y*z*alphas)) #in order to initial b
+</span>  <span class="n">b</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">)</span> <span class="c1">#initial b
+</span>  <span class="n">error</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">k</span><span class="p">),</span><span class="m">1</span><span class="p">)</span>
+  <span class="n">eps</span> <span class="o">=</span> <span class="m">1e-3</span>
+  <span class="n">numChanged</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="n">examineAll</span> <span class="o">=</span> <span class="m">1</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">numChanged</span> <span class="o">&gt;</span> <span class="m">0</span> <span class="o">|</span> <span class="n">examineAll</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">numChanged</span> <span class="o">=</span> <span class="m">0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">examineAll</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">i0</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="p">{</span>
+        <span class="c1"># loop through all data set
+</span>        <span class="n">examA</span> <span class="o">=</span> <span class="n">examineExample</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>   <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">numChanged</span> <span class="o">=</span> <span class="n">numChanged</span> <span class="o">+</span> <span class="n">examA</span><span class="o">$</span><span class="n">val</span>
+        <span class="c1">#w = examA$w
+</span>        <span class="n">alphas</span> <span class="o">=</span> <span class="n">examA</span><span class="o">$</span><span class="n">alphas</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">examA</span><span class="o">$</span><span class="n">error</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">examA</span><span class="o">$</span><span class="n">b</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">examA</span><span class="o">$</span><span class="n">n</span>
       <span class="p">}</span> 
-    <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-      unbound <span class="o">=</span> <span class="kp">which</span><span class="p">(</span>alphas<span class="o">!=</span><span class="m">0</span> <span class="o">&amp;</span> alphas<span class="o">!=</span>C<span class="p">)</span>
-      <span class="c1">#unbound = which(alphas&gt;eps &amp; alphas&lt;(C-eps))</span>
-      <span class="kr">for</span> <span class="p">(</span>i0 <span class="kr">in</span> unbound<span class="p">)</span> <span class="p">{</span>
-        <span class="c1"># loop through only the unbound data</span>
-        examB <span class="o">=</span> examineExample<span class="p">(</span>i0<span class="p">,</span>k<span class="o">=</span>k<span class="p">,</span>y<span class="o">=</span>y<span class="p">,</span>   b<span class="o">=</span>b<span class="p">,</span>alphas<span class="o">=</span>alphas<span class="p">,</span>eps<span class="o">=</span>eps<span class="p">,</span>tol<span class="o">=</span>tol<span class="p">,</span>C<span class="o">=</span>C<span class="p">,</span>error<span class="o">=</span>error<span class="p">,</span>n<span class="o">=</span>n<span class="p">)</span>
-        numChanged <span class="o">=</span> numChanged <span class="o">+</span> examB<span class="o">$</span>val
-        <span class="c1">#w = examB$w</span>
-        alphas <span class="o">=</span> examB<span class="o">$</span>alphas
-        error <span class="o">=</span> examB<span class="o">$</span>error
-        b <span class="o">=</span> examB<span class="o">$</span>b
-        n <span class="o">=</span> examB<span class="o">$</span>n
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">unbound</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="n">alphas</span><span class="o">!=</span><span class="m">0</span> <span class="o">&amp;</span> <span class="n">alphas</span><span class="o">!=</span><span class="n">C</span><span class="p">)</span>
+      <span class="c1">#unbound = which(alphas&gt;eps &amp; alphas&lt;(C-eps))
+</span>      <span class="k">for</span> <span class="p">(</span><span class="n">i0</span> <span class="k">in</span> <span class="n">unbound</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1"># loop through only the unbound data
+</span>        <span class="n">examB</span> <span class="o">=</span> <span class="n">examineExample</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span><span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>   <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">eps</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span><span class="n">error</span><span class="o">=</span><span class="n">error</span><span class="p">,</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">numChanged</span> <span class="o">=</span> <span class="n">numChanged</span> <span class="o">+</span> <span class="n">examB</span><span class="o">$</span><span class="n">val</span>
+        <span class="c1">#w = examB$w
+</span>        <span class="n">alphas</span> <span class="o">=</span> <span class="n">examB</span><span class="o">$</span><span class="n">alphas</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">examB</span><span class="o">$</span><span class="n">error</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">examB</span><span class="o">$</span><span class="n">b</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">examB</span><span class="o">$</span><span class="n">n</span>
       <span class="p">}</span>
     <span class="p">}</span>
     
-    <span class="kr">if</span> <span class="p">(</span>examineAll <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
-      examineAll <span class="o">=</span> <span class="m">0</span>
-    <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>numChanged <span class="o">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-      examineAll <span class="o">=</span> <span class="m">1</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">examineAll</span> <span class="o">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">examineAll</span> <span class="o">=</span> <span class="m">0</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">numChanged</span> <span class="o">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">examineAll</span> <span class="o">=</span> <span class="m">1</span>
     <span class="p">}</span>
   <span class="p">}</span>
-  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>alphas<span class="o">=</span>alphas<span class="p">,</span>b<span class="o">=</span>b<span class="p">)</span>
-  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
-<span class="p">}</span></code></pre></div>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">alphas</span><span class="o">=</span><span class="n">alphas</span><span class="p">,</span><span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
 
 <h2 id="smo-algorithm">SMO Algorithm</h2>
 
-<p><a href="http://en.wikipedia.org/wiki/Sequential_minimal_optimization">SMO</a> is an algotirhm for solving quadratic programming problem.  </p>
+<p><a href="http://en.wikipedia.org/wiki/Sequential_minimal_optimization">SMO</a> is an algotirhm for solving quadratic programming problem.</p>
 
 <p>I Still working on a mathematic explanation for my SMO code.</p>
 
@@ -384,52 +368,52 @@ main <span class="o">=</span> <span class="kr">function</span><span class="p">(<
 
 <p>Here is the plot of data.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kn">require</span><span class="p">(</span>R.matlab<span class="p">)</span>
-data <span class="o">=</span> readMat<span class="p">(</span><span class="s">&#39;ex6data1.mat&#39;</span><span class="p">)</span>
-X <span class="o">=</span> data<span class="o">$</span>X
-Y <span class="o">=</span> data<span class="o">$</span>y
-Y <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>Y<span class="p">,</span>Y<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">require</span><span class="p">(</span><span class="n">R.matlab</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">readMat</span><span class="p">(</span><span class="s1">'ex6data1.mat'</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">X</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">y</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
 
-x1 <span class="o">=</span> X<span class="p">[</span>Y<span class="o">==</span><span class="m">-1</span><span class="p">,]</span>
-x2 <span class="o">=</span> X<span class="p">[</span>Y<span class="o">==</span><span class="m">1</span><span class="p">,]</span>
-plot<span class="p">(</span>x1<span class="p">,</span> pch<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;blue&quot;</span><span class="p">,</span>xlim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>ylim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X<span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
-points<span class="p">(</span>x2<span class="p">,</span> pch<span class="o">=</span><span class="m">1</span><span class="p">,</span>col<span class="o">=</span><span class="s">&quot;red&quot;</span><span class="p">)</span></code></pre></div>
+<span class="n">x1</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">Y</span><span class="o">==</span><span class="m">-1</span><span class="p">,]</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">Y</span><span class="o">==</span><span class="m">1</span><span class="p">,]</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">pch</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span><span class="n">xlim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span><span class="n">ylim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span>
+<span class="n">points</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">pch</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /> </p>
+<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /></p>
 
 <p>We can find that there is a outlier in red points at top left corner. Should we consider this outlier or no? SVM is able to deal with this kind of situation.</p>
 
 <p>With different $C$, SVM will find different hyperplane to seperate the data:</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">X1 <span class="o">=</span> data1<span class="o">$</span>X
-Y1 <span class="o">=</span> data1<span class="o">$</span>y
-Y1 <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>Y1<span class="p">,</span>Y1<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">X1</span> <span class="o">=</span> <span class="n">data1</span><span class="o">$</span><span class="n">X</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">data1</span><span class="o">$</span><span class="n">y</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">Y1</span><span class="p">,</span><span class="n">Y1</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
 
-K1 <span class="o">=</span> kernal_linear<span class="p">(</span>X1<span class="p">)</span>
+<span class="n">K1</span> <span class="o">=</span> <span class="n">kernal_linear</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
 
-test1 <span class="o">=</span> main<span class="p">(</span>K1<span class="p">,</span>y <span class="o">=</span>Y1<span class="p">,</span>C<span class="o">=</span><span class="m">1000</span><span class="p">,</span>tol<span class="o">=</span><span class="m">0.01</span><span class="p">)</span>
-alphas1<span class="o">=</span>test1<span class="o">$</span>alphas
-b1 <span class="o">=</span> test1<span class="o">$</span>b
-w1 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>alphas1<span class="o">*</span>Y1<span class="p">)</span><span class="o">%*%</span>X1
+<span class="n">test1</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span><span class="n">Y1</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="m">1000</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="m">0.01</span><span class="p">)</span>
+<span class="n">alphas1</span><span class="o">=</span><span class="n">test1</span><span class="o">$</span><span class="n">alphas</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="n">test1</span><span class="o">$</span><span class="n">b</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">alphas1</span><span class="o">*</span><span class="n">Y1</span><span class="p">)</span><span class="o">%*%</span><span class="n">X1</span>
 
-linearplot<span class="p">(</span>X1<span class="p">,</span>Y1<span class="p">,</span>w1<span class="p">,</span>b1<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;C=1000&quot;</span><span class="p">)</span></code></pre></div>
+<span class="n">linearplot</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span><span class="n">Y1</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"C=1000"</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" /> </p>
+<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-4-1.png" alt="plot of chunk unnamed-chunk-4" /></p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">X1 <span class="o">=</span> data1<span class="o">$</span>X
-Y1 <span class="o">=</span> data1<span class="o">$</span>y
-Y1 <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>Y1<span class="p">,</span>Y1<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">X1</span> <span class="o">=</span> <span class="n">data1</span><span class="o">$</span><span class="n">X</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">data1</span><span class="o">$</span><span class="n">y</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">Y1</span><span class="p">,</span><span class="n">Y1</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
 
-K1 <span class="o">=</span> kernal_linear<span class="p">(</span>X1<span class="p">)</span>
+<span class="n">K1</span> <span class="o">=</span> <span class="n">kernal_linear</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
 
-test1 <span class="o">=</span> main<span class="p">(</span>K1<span class="p">,</span>y <span class="o">=</span>Y1<span class="p">,</span>C<span class="o">=</span><span class="m">1</span><span class="p">,</span>tol<span class="o">=</span><span class="m">0.01</span><span class="p">)</span>
-alphas1<span class="o">=</span>test1<span class="o">$</span>alphas
-b1 <span class="o">=</span> test1<span class="o">$</span>b
-w1 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>alphas1<span class="o">*</span>Y1<span class="p">)</span><span class="o">%*%</span>X1
+<span class="n">test1</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">K1</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span><span class="n">Y1</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="m">0.01</span><span class="p">)</span>
+<span class="n">alphas1</span><span class="o">=</span><span class="n">test1</span><span class="o">$</span><span class="n">alphas</span>
+<span class="n">b1</span> <span class="o">=</span> <span class="n">test1</span><span class="o">$</span><span class="n">b</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">alphas1</span><span class="o">*</span><span class="n">Y1</span><span class="p">)</span><span class="o">%*%</span><span class="n">X1</span>
 
-linearplot<span class="p">(</span>X1<span class="p">,</span>Y1<span class="p">,</span>w1<span class="p">,</span>b1<span class="p">,</span>main<span class="o">=</span><span class="s">&quot;C=1&quot;</span><span class="p">)</span></code></pre></div>
+<span class="n">linearplot</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span><span class="n">Y1</span><span class="p">,</span><span class="n">w1</span><span class="p">,</span><span class="n">b1</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"C=1"</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6" /> </p>
+<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6" /></p>
 
 <h3 id="non-linear-seperator">Non-linear Seperator</h3>
 
@@ -437,75 +421,75 @@ linearplot<span class="p">(</span>X1<span class="p">,</span>Y1<span class="p">,<
 
 <p>Here is the data</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">data2 <span class="o">=</span> readMat<span class="p">(</span><span class="s">&#39;ex6data2.mat&#39;</span><span class="p">)</span>
-X2 <span class="o">=</span> data2<span class="o">$</span>X
-Y2 <span class="o">=</span> data2<span class="o">$</span>y
-Y2 <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>Y2<span class="p">,</span>Y2<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
-plot<span class="p">(</span>X2<span class="p">,</span>cex<span class="o">=</span><span class="m">0.5</span><span class="p">,</span>col<span class="o">=</span><span class="p">(</span><span class="m">3</span><span class="o">+</span>Y2<span class="p">),</span>xlim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X2<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>ylim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X2<span class="p">[,</span><span class="m">2</span><span class="p">]),</span>xlab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">data2</span> <span class="o">=</span> <span class="n">readMat</span><span class="p">(</span><span class="s1">'ex6data2.mat'</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">data2</span><span class="o">$</span><span class="n">X</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="n">data2</span><span class="o">$</span><span class="n">y</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">Y2</span><span class="p">,</span><span class="n">Y2</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="p">(</span><span class="m">3</span><span class="o">+</span><span class="n">Y2</span><span class="p">),</span><span class="n">xlim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X2</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span><span class="n">ylim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X2</span><span class="p">[,</span><span class="m">2</span><span class="p">]),</span><span class="n">xlab</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7" /> </p>
+<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7" /></p>
 
 <p>Train the data set with different $C$ and $\sigma$</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">data2 <span class="o">=</span> readMat<span class="p">(</span><span class="s">&#39;ex6data2.mat&#39;</span><span class="p">)</span>
-X2 <span class="o">=</span> data2<span class="o">$</span>X
-Y2 <span class="o">=</span> data2<span class="o">$</span>y
-Y2 <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>Y2<span class="p">,</span>Y2<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
-K1 <span class="o">=</span> kernal_RBF<span class="p">(</span>X2<span class="p">,</span><span class="m">0.1</span><span class="p">)</span>
-test1 <span class="o">=</span> main<span class="p">(</span>K2<span class="p">,</span>y <span class="o">=</span>Y2<span class="p">,</span>C<span class="o">=</span><span class="m">1</span><span class="p">,</span>tol<span class="o">=</span><span class="m">0.1</span><span class="p">)</span>
-K2 <span class="o">=</span> kernal_RBF<span class="p">(</span>X2<span class="p">,</span><span class="m">0.029</span><span class="p">)</span>
-test2 <span class="o">=</span> main<span class="p">(</span>K2<span class="p">,</span>y <span class="o">=</span>Y2<span class="p">,</span>C<span class="o">=</span><span class="m">100</span><span class="p">,</span>tol<span class="o">=</span><span class="m">0.1</span><span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">data2</span> <span class="o">=</span> <span class="n">readMat</span><span class="p">(</span><span class="s1">'ex6data2.mat'</span><span class="p">)</span>
+<span class="n">X2</span> <span class="o">=</span> <span class="n">data2</span><span class="o">$</span><span class="n">X</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="n">data2</span><span class="o">$</span><span class="n">y</span>
+<span class="n">Y2</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">Y2</span><span class="p">,</span><span class="n">Y2</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">-1</span><span class="p">)</span>
+<span class="n">K1</span> <span class="o">=</span> <span class="n">kernal_RBF</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="m">0.1</span><span class="p">)</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">K2</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span><span class="n">Y2</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="m">0.1</span><span class="p">)</span>
+<span class="n">K2</span> <span class="o">=</span> <span class="n">kernal_RBF</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="m">0.029</span><span class="p">)</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">K2</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span><span class="n">Y2</span><span class="p">,</span><span class="n">C</span><span class="o">=</span><span class="m">100</span><span class="p">,</span><span class="n">tol</span><span class="o">=</span><span class="m">0.1</span><span class="p">)</span></code></pre></figure>
 
 <p>Here is the function to visulize the training result</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">Predict <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span>svalpha<span class="p">,</span>svX<span class="p">,</span>svY<span class="p">,</span>sigma<span class="o">=</span><span class="m">0.1</span><span class="p">)</span> <span class="p">{</span>
-<span class="c1">#   indx = alpha&gt;0</span>
-  x1 <span class="o">=</span> <span class="kp">rowSums</span><span class="p">(</span>x<span class="o">^</span><span class="m">2</span><span class="p">)</span>
-  sv1 <span class="o">=</span> <span class="kp">rowSums</span><span class="p">(</span>svX<span class="o">^</span><span class="m">2</span><span class="p">)</span>
-  temp <span class="o">=</span> <span class="m">-2</span><span class="o">*</span>x<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>svX<span class="p">)</span>
-  k1 <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>temp<span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="kr">function</span><span class="p">(</span>z<span class="p">)</span> z<span class="o">+</span>sv1<span class="p">)</span>
-  k <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>k1<span class="p">),</span><span class="m">2</span><span class="p">,</span><span class="kr">function</span><span class="p">(</span>z<span class="p">)</span> z<span class="o">+</span>x1<span class="p">)</span>
-  k <span class="o">=</span> <span class="kp">exp</span><span class="p">(</span><span class="o">-</span>k<span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span>sigma<span class="o">^</span><span class="m">2</span><span class="p">))</span>
-  k1 <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>k<span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="kr">function</span><span class="p">(</span>z<span class="p">)</span> z<span class="o">*</span>svY<span class="p">)</span>
-  k2 <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>k1<span class="p">),</span><span class="m">1</span><span class="p">,</span><span class="kr">function</span><span class="p">(</span>z<span class="p">)</span> z<span class="o">*</span>svalpha<span class="p">)</span>
-  K <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>k2<span class="p">)</span>
-  K <span class="o">=</span> <span class="kp">rowSums</span><span class="p">(</span>K<span class="p">)</span>
-  K<span class="p">[</span>K<span class="o">&gt;=</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="m">1</span>
-  K<span class="p">[</span>K<span class="o">&lt;</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span><span class="m">-1</span>
-  <span class="kr">return</span><span class="p">(</span>K<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">Predict</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">svalpha</span><span class="p">,</span><span class="n">svX</span><span class="p">,</span><span class="n">svY</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="m">0.1</span><span class="p">)</span> <span class="p">{</span>
+<span class="c1">#   indx = alpha&gt;0
+</span>  <span class="n">x1</span> <span class="o">=</span> <span class="n">rowSums</span><span class="p">(</span><span class="n">x</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
+  <span class="n">sv1</span> <span class="o">=</span> <span class="n">rowSums</span><span class="p">(</span><span class="n">svX</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
+  <span class="n">temp</span> <span class="o">=</span> <span class="m">-2</span><span class="o">*</span><span class="n">x</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">svX</span><span class="p">)</span>
+  <span class="n">k1</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="n">z</span><span class="o">+</span><span class="n">sv1</span><span class="p">)</span>
+  <span class="n">k</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">k1</span><span class="p">),</span><span class="m">2</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="n">z</span><span class="o">+</span><span class="n">x1</span><span class="p">)</span>
+  <span class="n">k</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">k</span><span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span><span class="n">sigma</span><span class="o">^</span><span class="m">2</span><span class="p">))</span>
+  <span class="n">k1</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="n">z</span><span class="o">*</span><span class="n">svY</span><span class="p">)</span>
+  <span class="n">k2</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">k1</span><span class="p">),</span><span class="m">1</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="n">z</span><span class="o">*</span><span class="n">svalpha</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">k2</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">rowSums</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
+  <span class="n">K</span><span class="p">[</span><span class="n">K</span><span class="o">&gt;=</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span> <span class="m">1</span>
+  <span class="n">K</span><span class="p">[</span><span class="n">K</span><span class="o">&lt;</span><span class="m">0</span><span class="p">]</span> <span class="o">=</span><span class="m">-1</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">K</span><span class="p">)</span>
 <span class="p">}</span>
 
-gen_space <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span>Y<span class="p">,</span>alpha<span class="p">,</span>l<span class="p">,</span>sigma<span class="o">=</span><span class="m">0.1</span><span class="p">){</span>
-  idx <span class="o">=</span> alpha<span class="o">&gt;</span><span class="m">0</span>
-  x1plot <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="kp">min</span><span class="p">(</span>data<span class="p">[,</span><span class="m">1</span><span class="p">]),</span><span class="kp">max</span><span class="p">(</span>data<span class="p">[,</span><span class="m">1</span><span class="p">]),(</span><span class="kp">max</span><span class="p">(</span>data<span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="o">-</span><span class="kp">min</span><span class="p">(</span>data<span class="p">[,</span><span class="m">1</span><span class="p">]))</span><span class="o">/</span><span class="p">(</span>l<span class="m">-1</span><span class="p">))</span>
-  x2plot <span class="o">=</span> <span class="kp">seq</span><span class="p">(</span><span class="kp">min</span><span class="p">(</span>data<span class="p">[,</span><span class="m">2</span><span class="p">]),</span><span class="kp">max</span><span class="p">(</span>data<span class="p">[,</span><span class="m">2</span><span class="p">]),(</span><span class="kp">max</span><span class="p">(</span>data<span class="p">[,</span><span class="m">2</span><span class="p">])</span><span class="o">-</span><span class="kp">min</span><span class="p">(</span>data<span class="p">[,</span><span class="m">2</span><span class="p">]))</span><span class="o">/</span><span class="p">(</span>l<span class="m">-1</span><span class="p">))</span>
-  xx1 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span><span class="kt">matrix</span><span class="p">(</span><span class="kp">rep</span><span class="p">(</span>x1plot<span class="p">,</span>l<span class="p">),</span>l<span class="p">,</span>l<span class="p">))</span>
-  xx2 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="kp">rep</span><span class="p">(</span>x2plot<span class="p">,</span>l<span class="p">),</span>l<span class="p">,</span>l<span class="p">)</span>
+<span class="n">gen_space</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">l</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="m">0.1</span><span class="p">){</span>
+  <span class="n">idx</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">&gt;</span><span class="m">0</span>
+  <span class="n">x1plot</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">1</span><span class="p">]),(</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">1</span><span class="p">]))</span><span class="o">/</span><span class="p">(</span><span class="n">l</span><span class="m">-1</span><span class="p">))</span>
+  <span class="n">x2plot</span> <span class="o">=</span> <span class="n">seq</span><span class="p">(</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">2</span><span class="p">]),</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">2</span><span class="p">]),(</span><span class="n">max</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">2</span><span class="p">])</span><span class="o">-</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="p">[,</span><span class="m">2</span><span class="p">]))</span><span class="o">/</span><span class="p">(</span><span class="n">l</span><span class="m">-1</span><span class="p">))</span>
+  <span class="n">xx1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">matrix</span><span class="p">(</span><span class="n">rep</span><span class="p">(</span><span class="n">x1plot</span><span class="p">,</span><span class="n">l</span><span class="p">),</span><span class="n">l</span><span class="p">,</span><span class="n">l</span><span class="p">))</span>
+  <span class="n">xx2</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">rep</span><span class="p">(</span><span class="n">x2plot</span><span class="p">,</span><span class="n">l</span><span class="p">),</span><span class="n">l</span><span class="p">,</span><span class="n">l</span><span class="p">)</span>
   
-  svX2 <span class="o">=</span> data<span class="p">[</span>idx<span class="p">,]</span>
-  svY2 <span class="o">=</span> Y<span class="p">[</span>idx<span class="p">,]</span>
-  svalphas2 <span class="o">=</span> alpha<span class="p">[</span>idx2<span class="p">,]</span>
-  vals <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>xx1<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>xx2<span class="p">))</span>
-  <span class="kr">for</span><span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="kp">ncol</span><span class="p">(</span>xx1<span class="p">))</span> <span class="p">{</span>
-    xx <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span>xx1<span class="p">[,</span>i<span class="p">],</span>xx2<span class="p">[,</span>i<span class="p">])</span>
-    vals<span class="p">[</span>i<span class="p">,]</span> <span class="o">=</span> Predict<span class="p">(</span>xx<span class="p">,</span>svalphas2<span class="p">,</span>svX2<span class="p">,</span>svY2<span class="p">,</span>sigma<span class="o">=</span>sigma<span class="p">)</span>
+  <span class="n">svX2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
+  <span class="n">svY2</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="n">idx</span><span class="p">,]</span>
+  <span class="n">svalphas2</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">[</span><span class="n">idx2</span><span class="p">,]</span>
+  <span class="n">vals</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">xx1</span><span class="p">),</span><span class="n">ncol</span><span class="p">(</span><span class="n">xx2</span><span class="p">))</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">ncol</span><span class="p">(</span><span class="n">xx1</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">xx</span> <span class="o">=</span> <span class="n">cbind</span><span class="p">(</span><span class="n">xx1</span><span class="p">[,</span><span class="n">i</span><span class="p">],</span><span class="n">xx2</span><span class="p">[,</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">vals</span><span class="p">[</span><span class="n">i</span><span class="p">,]</span> <span class="o">=</span> <span class="n">Predict</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">svalphas2</span><span class="p">,</span><span class="n">svX2</span><span class="p">,</span><span class="n">svY2</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">)</span>
   <span class="p">}</span>
-  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>x<span class="o">=</span>x1plot<span class="p">,</span>y<span class="o">=</span>x2plot<span class="p">,</span>z<span class="o">=</span>vals<span class="p">))</span>
-<span class="c1">#   contour(x1plot,x2plot,vals,nlevels=nlevel,lty=lty)</span>
-<span class="p">}</span></code></pre></div>
+  <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x1plot</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">x2plot</span><span class="p">,</span><span class="n">z</span><span class="o">=</span><span class="n">vals</span><span class="p">))</span>
+<span class="c1">#   contour(x1plot,x2plot,vals,nlevels=nlevel,lty=lty)
+</span><span class="p">}</span></code></pre></figure>
 
 <p>Visualize the two hyperplanes</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">alphas2 <span class="o">=</span> read.table<span class="p">(</span><span class="s">&quot;s0.1c1&quot;</span><span class="p">)</span>
-space <span class="o">=</span> gen_space<span class="p">(</span>X2<span class="p">,</span>Y2<span class="p">,</span>alphas2<span class="p">,</span><span class="m">100</span><span class="p">)</span>
-plot<span class="p">(</span>X2<span class="p">,</span>cex<span class="o">=</span><span class="m">0.5</span><span class="p">,</span>col<span class="o">=</span><span class="p">(</span><span class="m">3</span><span class="o">+</span>Y2<span class="p">),</span>xlim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X2<span class="p">[,</span><span class="m">1</span><span class="p">]),</span>ylim<span class="o">=</span><span class="kp">range</span><span class="p">(</span>X2<span class="p">[,</span><span class="m">2</span><span class="p">]),</span>xlab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>ylab<span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">,</span>main<span class="o">=</span><span class="s">&quot;Non-linear seperator&quot;</span><span class="p">)</span>
-contour<span class="p">(</span>space<span class="o">$</span>x<span class="p">,</span>space<span class="o">$</span>y<span class="p">,</span>space<span class="o">$</span>z<span class="p">,</span>nlevels<span class="o">=</span><span class="m">1</span><span class="p">,</span>lty<span class="o">=</span><span class="m">1</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>labels<span class="o">=</span><span class="s">&quot;sigma0.1 C1&quot;</span><span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">alphas2</span> <span class="o">=</span> <span class="n">read.table</span><span class="p">(</span><span class="s2">"s0.1c1"</span><span class="p">)</span>
+<span class="n">space</span> <span class="o">=</span> <span class="n">gen_space</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="n">Y2</span><span class="p">,</span><span class="n">alphas2</span><span class="p">,</span><span class="m">100</span><span class="p">)</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.5</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="p">(</span><span class="m">3</span><span class="o">+</span><span class="n">Y2</span><span class="p">),</span><span class="n">xlim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X2</span><span class="p">[,</span><span class="m">1</span><span class="p">]),</span><span class="n">ylim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">X2</span><span class="p">[,</span><span class="m">2</span><span class="p">]),</span><span class="n">xlab</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Non-linear seperator"</span><span class="p">)</span>
+<span class="n">contour</span><span class="p">(</span><span class="n">space</span><span class="o">$</span><span class="n">x</span><span class="p">,</span><span class="n">space</span><span class="o">$</span><span class="n">y</span><span class="p">,</span><span class="n">space</span><span class="o">$</span><span class="n">z</span><span class="p">,</span><span class="n">nlevels</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">lty</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="s2">"sigma0.1 C1"</span><span class="p">)</span>
 
-alpha <span class="o">=</span> read.table<span class="p">(</span><span class="s">&quot;s0.029c100&quot;</span><span class="p">)</span>
-space1 <span class="o">=</span> gen_space<span class="p">(</span>X2<span class="p">,</span>Y2<span class="p">,</span>alpha<span class="p">,</span><span class="m">100</span><span class="p">,</span>sigma<span class="o">=</span><span class="m">0.029</span><span class="p">)</span>
-contour<span class="p">(</span>space1<span class="o">$</span>x<span class="p">,</span>space1<span class="o">$</span>y<span class="p">,</span>space1<span class="o">$</span>z<span class="p">,</span>nlevels<span class="o">=</span><span class="m">1</span><span class="p">,</span>lty<span class="o">=</span><span class="m">1</span><span class="p">,</span>add<span class="o">=</span><span class="bp">T</span><span class="p">,</span>col<span class="o">=</span><span class="m">4</span><span class="p">,</span>lwd<span class="o">=</span><span class="m">2</span><span class="p">,</span>labels<span class="o">=</span><span class="s">&quot;sigma0.029 C100&quot;</span><span class="p">)</span></code></pre></div>
+<span class="n">alpha</span> <span class="o">=</span> <span class="n">read.table</span><span class="p">(</span><span class="s2">"s0.029c100"</span><span class="p">)</span>
+<span class="n">space1</span> <span class="o">=</span> <span class="n">gen_space</span><span class="p">(</span><span class="n">X2</span><span class="p">,</span><span class="n">Y2</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="n">sigma</span><span class="o">=</span><span class="m">0.029</span><span class="p">)</span>
+<span class="n">contour</span><span class="p">(</span><span class="n">space1</span><span class="o">$</span><span class="n">x</span><span class="p">,</span><span class="n">space1</span><span class="o">$</span><span class="n">y</span><span class="p">,</span><span class="n">space1</span><span class="o">$</span><span class="n">z</span><span class="p">,</span><span class="n">nlevels</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">lty</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">add</span><span class="o">=</span><span class="n">T</span><span class="p">,</span><span class="n">col</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="n">lwd</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="s2">"sigma0.029 C100"</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11" /> </p>
+<p><img src="/figure/source/2014-12-16-Support-Vector-Machine/unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11" /></p>
 
 <h1 id="refference">Refference</h1>
 

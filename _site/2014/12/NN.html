@@ -89,35 +89,35 @@ MathJax.Hub.Config({
 
   <article class="post-content">
     <h2 id="intorduction">Intorduction</h2>
-<p>This algorithm is for a <a href="https://www.kaggle.com/c/digit-recognizer">kaggle competition</a> to take an image of a handwritten single digit, and determine what that digit is. The data used is <a href="https://www.kaggle.com/c/digit-recognizer/data">MNIST data</a>.     </p>
+<p>This algorithm is for a <a href="https://www.kaggle.com/c/digit-recognizer">kaggle competition</a> to take an image of a handwritten single digit, and determine what that digit is. The data used is <a href="https://www.kaggle.com/c/digit-recognizer/data">MNIST data</a>.</p>
 
-<p>The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.  </p>
+<p>The data include 42000 image of hand-drawn digits. Each image is 28 pixels in height and 28 pixels in width, for a total of 784 pixels.</p>
 
-<p>Let’s visualize some sample data:     </p>
+<p>Let’s visualize some sample data:</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r"><span class="kn">require</span><span class="p">(</span>graphics<span class="p">)</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">require</span><span class="p">(</span><span class="n">graphics</span><span class="p">)</span>
 
-flip <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">)</span> <span class="p">{</span>
-  xx<span class="o">=</span><span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>x<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>x<span class="p">))</span>
-  <span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="kp">nrow</span><span class="p">(</span>x<span class="p">))){</span>
-    xx<span class="p">[</span>i<span class="p">,]</span> <span class="o">=</span> <span class="kp">rev</span><span class="p">(</span>x<span class="p">[</span>i<span class="p">,])}</span>
-  <span class="kr">return</span><span class="p">(</span>xx<span class="p">)}</span>
+<span class="n">flip</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">xx</span><span class="o">=</span><span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="n">ncol</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">x</span><span class="p">))){</span>
+    <span class="n">xx</span><span class="p">[</span><span class="n">i</span><span class="p">,]</span> <span class="o">=</span> <span class="n">rev</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,])}</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">xx</span><span class="p">)}</span>
 
-sample_plot <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>x<span class="p">,</span>n<span class="p">)</span> <span class="p">{</span>
-  xx <span class="o">=</span> <span class="kt">list</span><span class="p">()</span>
-  par<span class="p">(</span>mfrow<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="kp">sqrt</span><span class="p">(</span>n<span class="p">),</span> <span class="kp">sqrt</span><span class="p">(</span>n<span class="p">)),</span>mar<span class="o">=</span><span class="kp">rep</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span><span class="m">4</span><span class="p">))</span>
-  <span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span>n<span class="p">)</span> <span class="p">{</span>
-    temp <span class="o">=</span> <span class="kp">as.numeric</span><span class="p">(</span>x<span class="p">[</span>i<span class="p">,])</span>
-    temp <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>temp<span class="p">,</span><span class="m">28</span><span class="p">,</span><span class="m">28</span><span class="p">)</span>
-    xx<span class="p">[[</span>i<span class="p">]]</span> <span class="o">=</span> flip<span class="p">(</span>temp<span class="p">)</span>
-    image<span class="p">(</span>z<span class="o">=</span>xx<span class="p">[[</span>i<span class="p">]],</span> col<span class="o">=</span>gray.colors<span class="p">(</span><span class="m">12</span><span class="p">),</span>xaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>yaxt<span class="o">=</span><span class="s">&#39;n&#39;</span><span class="p">,</span>ann<span class="o">=</span><span class="kc">FALSE</span><span class="p">)</span>
+<span class="n">sample_plot</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">xx</span> <span class="o">=</span> <span class="n">list</span><span class="p">()</span>
+  <span class="n">par</span><span class="p">(</span><span class="n">mfrow</span><span class="o">=</span><span class="n">c</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)),</span><span class="n">mar</span><span class="o">=</span><span class="n">rep</span><span class="p">(</span><span class="m">0.2</span><span class="p">,</span><span class="m">4</span><span class="p">))</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">as.numeric</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,])</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span><span class="m">28</span><span class="p">,</span><span class="m">28</span><span class="p">)</span>
+    <span class="n">xx</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">flip</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="n">image</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="n">xx</span><span class="p">[[</span><span class="n">i</span><span class="p">]],</span> <span class="n">col</span><span class="o">=</span><span class="n">gray.colors</span><span class="p">(</span><span class="m">12</span><span class="p">),</span><span class="n">xaxt</span><span class="o">=</span><span class="s1">'n'</span><span class="p">,</span><span class="n">yaxt</span><span class="o">=</span><span class="s1">'n'</span><span class="p">,</span><span class="n">ann</span><span class="o">=</span><span class="n">FALSE</span><span class="p">)</span>
   <span class="p">}}</span>
 
-sample_p <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;sample.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">)[,</span><span class="m">-1</span><span class="p">]</span>
-sample_p <span class="o">=</span> sample_p<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
-sample_plot<span class="p">(</span>sample_p<span class="p">,</span><span class="m">16</span><span class="p">)</span></code></pre></div>
+<span class="n">sample_p</span> <span class="o">&lt;-</span> <span class="n">read.csv</span><span class="p">(</span><span class="s2">"sample.csv"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">TRUE</span><span class="p">)[,</span><span class="m">-1</span><span class="p">]</span>
+<span class="n">sample_p</span> <span class="o">=</span> <span class="n">sample_p</span><span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
+<span class="n">sample_plot</span><span class="p">(</span><span class="n">sample_p</span><span class="p">,</span><span class="m">16</span><span class="p">)</span></code></pre></figure>
 
-<p><img src="/figure/source/2014-12-2-NN/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /> </p>
+<p><img src="/figure/source/2014-12-2-NN/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <h2 id="neural-network-algorithm">Neural Network Algorithm</h2>
 
@@ -125,21 +125,13 @@ sample_plot<span class="p">(</span>sample_p<span class="p">,</span><span class="
 
 <p>The model used is one level Artifical Neural Network(ANN). The superscript number in brack of each variable represent the level. In this model(one level ANN), 0 represent input level, 1 represent hidden level, 2 represent output level. $X^{(0)}$ is the raw data(a image of hand-drawn digit), a 1 row 784 columns matrix. $f_{\theta}(a)$ is a sigmoid function。$a$ hidden level variables，$z$ is the hidden level data and the output of sigmoid function ,$\Theta^{(l)}_0$ are the biased terms in input level and output level. $\widehat{Y}$ is the output and predicted values，a 1 row 10 columns matrix range between 0 and 1. When the maximum value lie in the third column, the prediction of the image would be 3.</p>
 
-<script type="math/tex; mode=display">
-a^{(1)} = \Theta^{(1)}_0+X^{(0)}(\Theta^{(1)})^T
-</script>
+<script type="math/tex; mode=display">a^{(1)} = \Theta^{(1)}_0+X^{(0)}(\Theta^{(1)})^T</script>
 
-<script type="math/tex; mode=display">
-z^{(1)} = f_{\theta}(a^{(1)})
-</script>
+<script type="math/tex; mode=display">z^{(1)} = f_{\theta}(a^{(1)})</script>
 
-<script type="math/tex; mode=display">
-a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
-</script>
+<script type="math/tex; mode=display">a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T</script>
 
-<script type="math/tex; mode=display">
-\hat{Y} = f_{\theta}(a^{(2)})
-</script>
+<script type="math/tex; mode=display">\hat{Y} = f_{\theta}(a^{(2)})</script>
 
 <p>Here is structure of one hidden layer  Neural Network(with 15 unit in the hidden layer):</p>
 
@@ -147,277 +139,265 @@ a^{(2)} = \Theta^{(2)}_0+z^{(1)}(\Theta^{(2)})^T
 
 <h3 id="cost-function">Cost Function</h3>
 
-<p>For classification problem, we use Cross-entropy cost function:    </p>
+<p>For classification problem, we use Cross-entropy cost function:</p>
 
-<script type="math/tex; mode=display">
-J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}  
-  + (1-y^{(i)}_k ) log( 1- f_\theta (a^{(i)})_{k} )  \right]     
-</script>
+<script type="math/tex; mode=display">J(\Theta)= -\frac{1}{2}  \left[  \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}  
+  + (1-y^{(i)}_k ) log( 1- f_\theta (a^{(i)})_{k} )  \right]</script>
 
 <p>or the simple version:</p>
 
-<script type="math/tex; mode=display">
-J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}      
-</script>
+<script type="math/tex; mode=display">J(\Theta)= -\frac{1}{m} \sum^m_i \sum^{10}_k y^{(i)}_{k}log f_\theta (a^{(i)})_{k}</script>
 
 <h3 id="back-propagation">Back Propagation</h3>
 
 <p>From the cost function $J(\Theta)$, we have the derivatives of $\Theta^{(1)}$ and $\Theta^{(2)}$:</p>
 
-<script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}}
-</script>
+<script type="math/tex; mode=display">\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}}</script>
 
-<script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  (y-f_{\theta}(a^{(2)}))^Tz^{(1)}
-</script>
+<script type="math/tex; mode=display">\frac{\partial J(\Theta)}{\partial \Theta^{(2)}} =  (y-f_{\theta}(a^{(2)}))^Tz^{(1)}</script>
 
-<script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial \Theta^{(1)}}
-</script>
+<script type="math/tex; mode=display">\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} =  \frac{\partial f_{\theta}(a^{(2)})}{\partial a^{(2)}} \frac{\partial a^{(2)}}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} \frac{\partial a^{(1)}}{\partial \Theta^{(1)}}</script>
 
-<script type="math/tex; mode=display">
-\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} = \frac{\partial J(\Theta)}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} X^{(0)}
-</script>
+<script type="math/tex; mode=display">\frac{\partial J(\Theta)}{\partial \Theta^{(1)}} = \frac{\partial J(\Theta)}{\partial \Theta^{(2)}} \frac{\partial f_{\theta}(a^{(1)})}{\partial a^{(1)}} X^{(0)}</script>
 
-<p>Here is the R code for the neural network. This model include 25 units in the hidden layer. $J(\Theta)$ can be minimize by gradient descent, called back-propagation in the setting.    </p>
+<p>Here is the R code for the neural network. This model include 25 units in the hidden layer. $J(\Theta)$ can be minimize by gradient descent, called back-propagation in the setting.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">NN_cost <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span> y<span class="p">,</span> init<span class="p">,</span> h_layer<span class="o">=</span><span class="m">25</span><span class="p">,</span> lambda<span class="o">=</span><span class="m">0</span><span class="p">,</span> num_labels<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">NN_cost</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">init</span><span class="p">,</span> <span class="n">h_layer</span><span class="o">=</span><span class="m">25</span><span class="p">,</span> <span class="n">lambda</span><span class="o">=</span><span class="m">0</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
   
-  m <span class="o">=</span> <span class="kp">nrow</span><span class="p">(</span>data<span class="p">)</span>
-  <span class="c1"># reshape Theta1 and Theta2</span>
-  in_layer <span class="o">=</span> <span class="kp">ncol</span><span class="p">(</span>data<span class="p">)</span>
-  par_t1 <span class="o">=</span> init<span class="p">[</span><span class="kt">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="p">((</span>in_layer<span class="m">+1</span><span class="p">)</span><span class="o">*</span>h_layer<span class="p">))]</span>
+  <span class="n">m</span> <span class="o">=</span> <span class="n">nrow</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+  <span class="c1"># reshape Theta1 and Theta2
+</span>  <span class="n">in_layer</span> <span class="o">=</span> <span class="n">ncol</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+  <span class="n">par_t1</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="p">((</span><span class="n">in_layer</span><span class="m">+1</span><span class="p">)</span><span class="o">*</span><span class="n">h_layer</span><span class="p">))]</span>
 
-  par_t2 <span class="o">=</span> init<span class="p">[</span><span class="kt">c</span><span class="p">(((</span>in_layer<span class="m">+1</span><span class="p">)</span><span class="o">*</span>h_layer<span class="m">+1</span><span class="p">)</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>init<span class="p">))]</span>
-  Theta1 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>par_t1<span class="p">,</span>h_layer<span class="p">,</span>in_layer<span class="m">+1</span><span class="p">)</span>
-  Theta2 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>par_t2<span class="p">,</span>num_labels<span class="p">,</span>h_layer<span class="m">+1</span><span class="p">)</span>
+  <span class="n">par_t2</span> <span class="o">=</span> <span class="n">init</span><span class="p">[</span><span class="n">c</span><span class="p">(((</span><span class="n">in_layer</span><span class="m">+1</span><span class="p">)</span><span class="o">*</span><span class="n">h_layer</span><span class="m">+1</span><span class="p">)</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">init</span><span class="p">))]</span>
+  <span class="n">Theta1</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">par_t1</span><span class="p">,</span><span class="n">h_layer</span><span class="p">,</span><span class="n">in_layer</span><span class="m">+1</span><span class="p">)</span>
+  <span class="n">Theta2</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">par_t2</span><span class="p">,</span><span class="n">num_labels</span><span class="p">,</span><span class="n">h_layer</span><span class="m">+1</span><span class="p">)</span>
   
   
-  a1 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>data<span class="p">)</span>
-  z2 <span class="o">=</span> a1<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>Theta1<span class="p">)</span>
-  a2 <span class="o">=</span> <span class="kp">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span>sigmoid<span class="p">(</span>z2<span class="p">))</span>
-  z3 <span class="o">=</span> a2<span class="o">%*%</span><span class="kp">t</span><span class="p">(</span>Theta2<span class="p">)</span>
-  h <span class="o">=</span> sigmoid<span class="p">(</span>z3<span class="p">)</span>
+  <span class="n">a1</span> <span class="o">=</span> <span class="n">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">data</span><span class="p">)</span>
+  <span class="n">z2</span> <span class="o">=</span> <span class="n">a1</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta1</span><span class="p">)</span>
+  <span class="n">a2</span> <span class="o">=</span> <span class="n">cbind</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">z2</span><span class="p">))</span>
+  <span class="n">z3</span> <span class="o">=</span> <span class="n">a2</span><span class="o">%*%</span><span class="n">t</span><span class="p">(</span><span class="n">Theta2</span><span class="p">)</span>
+  <span class="n">h</span> <span class="o">=</span> <span class="n">sigmoid</span><span class="p">(</span><span class="n">z3</span><span class="p">)</span>
   
-  ny <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="kp">length</span><span class="p">(</span>y<span class="p">),</span>num_labels<span class="p">)</span>
-  <span class="kr">for</span> <span class="p">(</span>i <span class="kr">in</span> <span class="m">1</span><span class="o">:</span><span class="kp">length</span><span class="p">(</span>y<span class="p">)){</span>
-    ny<span class="p">[</span>i<span class="p">,</span>y<span class="p">[</span>i<span class="p">]]</span> <span class="o">=</span> <span class="m">1</span>
+  <span class="n">ny</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="n">length</span><span class="p">(</span><span class="n">y</span><span class="p">),</span><span class="n">num_labels</span><span class="p">)</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">length</span><span class="p">(</span><span class="n">y</span><span class="p">)){</span>
+    <span class="n">ny</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="m">1</span>
   <span class="p">}</span>
   
-  regu <span class="o">=</span> lambda<span class="o">*</span><span class="p">(</span><span class="kp">sum</span><span class="p">(</span>Theta1<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">+</span><span class="kp">sum</span><span class="p">(</span>Theta2<span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span>m<span class="p">)</span>
-  cost <span class="o">=</span> <span class="o">-</span><span class="kp">sum</span><span class="p">(</span>ny<span class="o">*</span><span class="kp">log</span><span class="p">(</span>h<span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>ny<span class="p">)</span><span class="o">*</span><span class="kp">log</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>h<span class="p">))</span><span class="o">/</span>m<span class="o">+</span>regu
+  <span class="n">regu</span> <span class="o">=</span> <span class="n">lambda</span><span class="o">*</span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">Theta1</span><span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="o">+</span><span class="n">sum</span><span class="p">(</span><span class="n">Theta2</span><span class="p">[,</span><span class="m">-1</span><span class="p">]</span><span class="o">^</span><span class="m">2</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="m">2</span><span class="o">*</span><span class="n">m</span><span class="p">)</span>
+  <span class="n">cost</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span><span class="p">(</span><span class="n">ny</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="n">h</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">ny</span><span class="p">)</span><span class="o">*</span><span class="n">log</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">h</span><span class="p">))</span><span class="o">/</span><span class="n">m</span><span class="o">+</span><span class="n">regu</span>
   
-  delta3 <span class="o">=</span> h<span class="o">-</span>ny
-  delta2 <span class="o">=</span> <span class="p">(</span>delta3<span class="o">%*%</span>Theta2<span class="p">[,</span><span class="m">-1</span><span class="p">])</span><span class="o">*</span>sigmoidGradient<span class="p">(</span>z2<span class="p">)</span>
+  <span class="n">delta3</span> <span class="o">=</span> <span class="n">h</span><span class="o">-</span><span class="n">ny</span>
+  <span class="n">delta2</span> <span class="o">=</span> <span class="p">(</span><span class="n">delta3</span><span class="o">%*%</span><span class="n">Theta2</span><span class="p">[,</span><span class="m">-1</span><span class="p">])</span><span class="o">*</span><span class="n">sigmoidGradient</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span>
   
-  thres1 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>Theta1<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>Theta1<span class="p">))</span>
-  thres1<span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
-  thres2 <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>Theta2<span class="p">),</span><span class="kp">ncol</span><span class="p">(</span>Theta2<span class="p">))</span>
-  thres2<span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="n">thres1</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">Theta1</span><span class="p">),</span><span class="n">ncol</span><span class="p">(</span><span class="n">Theta1</span><span class="p">))</span>
+  <span class="n">thres1</span><span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="n">thres2</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">Theta2</span><span class="p">),</span><span class="n">ncol</span><span class="p">(</span><span class="n">Theta2</span><span class="p">))</span>
+  <span class="n">thres2</span><span class="p">[,</span><span class="m">1</span><span class="p">]</span> <span class="o">=</span> <span class="m">0</span>
   
-  Theta1_grad <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>delta2<span class="p">)</span><span class="o">%*%</span>a1<span class="p">)</span><span class="o">/</span>m <span class="o">+</span> thres1<span class="o">*</span>Theta1<span class="o">*</span>lambda<span class="o">/</span>m
-  Theta2_grad <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>delta3<span class="p">)</span><span class="o">%*%</span>a2<span class="p">)</span><span class="o">/</span>m <span class="o">+</span> thres2<span class="o">*</span>Theta2<span class="o">*</span>lambda<span class="o">/</span>m
+  <span class="n">Theta1_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">delta2</span><span class="p">)</span><span class="o">%*%</span><span class="n">a1</span><span class="p">)</span><span class="o">/</span><span class="n">m</span> <span class="o">+</span> <span class="n">thres1</span><span class="o">*</span><span class="n">Theta1</span><span class="o">*</span><span class="n">lambda</span><span class="o">/</span><span class="n">m</span>
+  <span class="n">Theta2_grad</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">delta3</span><span class="p">)</span><span class="o">%*%</span><span class="n">a2</span><span class="p">)</span><span class="o">/</span><span class="n">m</span> <span class="o">+</span> <span class="n">thres2</span><span class="o">*</span><span class="n">Theta2</span><span class="o">*</span><span class="n">lambda</span><span class="o">/</span><span class="n">m</span>
   
-  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>cost<span class="o">=</span>cost<span class="p">,</span>h<span class="o">=</span>h<span class="p">,</span>grad<span class="o">=</span><span class="kt">list</span><span class="p">(</span>t1<span class="o">=</span>Theta1_grad<span class="p">,</span>t2<span class="o">=</span>Theta2_grad<span class="p">))</span>
-  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
-<span class="p">}</span></code></pre></div>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">cost</span><span class="o">=</span><span class="n">cost</span><span class="p">,</span><span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span><span class="n">grad</span><span class="o">=</span><span class="n">list</span><span class="p">(</span><span class="n">t1</span><span class="o">=</span><span class="n">Theta1_grad</span><span class="p">,</span><span class="n">t2</span><span class="o">=</span><span class="n">Theta2_grad</span><span class="p">))</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
 
 <h2 id="train-the-model">Train The Model</h2>
 
 <p>First, we randomly select 70% of data as training data set.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">data_all <span class="o">&lt;-</span> read.csv<span class="p">(</span><span class="s">&quot;train.csv&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
-train_size <span class="o">=</span> <span class="kp">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>data_all<span class="p">))</span>
-train_indx <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">seq_len</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>data_all<span class="p">)),</span> size <span class="o">=</span> train_size<span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">data_all</span> <span class="o">&lt;-</span> <span class="n">read.csv</span><span class="p">(</span><span class="s2">"train.csv"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">TRUE</span><span class="p">)</span>
+<span class="n">train_size</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="n">nrow</span><span class="p">(</span><span class="n">data_all</span><span class="p">))</span>
+<span class="n">train_indx</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">seq_len</span><span class="p">(</span><span class="n">nrow</span><span class="p">(</span><span class="n">data_all</span><span class="p">)),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">train_size</span><span class="p">)</span></code></pre></figure>
 
 <p>Preprocess and normalize data.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">data <span class="o">=</span> data_all<span class="p">[</span>train_indx<span class="p">,]</span>
-train <span class="o">=</span> data<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
-train <span class="o">=</span> <span class="kp">data.matrix</span><span class="p">(</span>train<span class="p">)</span>
-y <span class="o">=</span> data<span class="o">$</span>label
-y<span class="o">=</span><span class="kp">replace</span><span class="p">(</span>y<span class="p">,</span>y<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
-train_nl <span class="o">=</span> <span class="p">(</span>train<span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">data</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span><span class="n">train_indx</span><span class="p">,]</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">data</span><span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">data.matrix</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="o">$</span><span class="n">label</span>
+<span class="n">y</span><span class="o">=</span><span class="n">replace</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">y</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
+<span class="n">train_nl</span> <span class="o">=</span> <span class="p">(</span><span class="n">train</span><span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span></code></pre></figure>
 
 <p>Build up the initial value and training variables.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">h_layer<span class="o">=</span><span class="m">25</span>
-t1_epsilon <span class="o">=</span> <span class="kp">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="kp">sqrt</span><span class="p">(</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="o">+</span>h_layer<span class="p">)</span>
-t2_epsilon <span class="o">=</span> <span class="kp">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="kp">sqrt</span><span class="p">(</span>h_layer<span class="m">+10</span><span class="p">)</span>
-t1_random <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>runif<span class="p">((</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="m">+1</span><span class="p">)</span><span class="o">*</span><span class="m">25</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">25</span><span class="p">,(</span><span class="kp">ncol</span><span class="p">(</span>train<span class="p">)</span><span class="m">+1</span><span class="p">))</span>
-t2_random <span class="o">=</span> <span class="kt">matrix</span><span class="p">(</span>runif<span class="p">(</span><span class="m">26</span><span class="o">*</span><span class="m">10</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">10</span><span class="p">,</span><span class="m">26</span><span class="p">)</span>
-t1_random <span class="o">=</span> t1_random<span class="o">*</span><span class="m">2</span><span class="o">*</span>t1_epsilon <span class="o">-</span> t1_epsilon
-t2_random <span class="o">=</span> t2_random<span class="o">*</span><span class="m">2</span><span class="o">*</span>t2_epsilon <span class="o">-</span> t2_epsilon
-ini <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kp">as.vector</span><span class="p">(</span>t1_random<span class="p">),</span><span class="kp">as.vector</span><span class="p">(</span>t2_random<span class="p">))</span>
-lambda<span class="o">=</span><span class="m">1</span>
-costFunction <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>p<span class="p">)</span> <span class="p">{</span>
-  result <span class="o">=</span> NN_cost<span class="p">(</span>train_nl<span class="p">,</span>y<span class="p">,</span>p<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">)</span>
-  J <span class="o">=</span> result<span class="o">$</span>cost
-  grad <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kp">as.vector</span><span class="p">(</span>result<span class="o">$</span>grad<span class="o">$</span>t1<span class="p">),</span><span class="kp">as.vector</span><span class="p">(</span>result<span class="o">$</span>grad<span class="o">$</span>t2<span class="p">))</span>
-  grad <span class="o">=</span> <span class="kp">as.matrix</span><span class="p">(</span>grad<span class="p">,</span><span class="kp">length</span><span class="p">(</span>grad<span class="p">),</span><span class="m">1</span><span class="p">)</span>
-  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>J<span class="o">=</span>J<span class="p">,</span>grad<span class="o">=</span>grad<span class="p">))</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">h_layer</span><span class="o">=</span><span class="m">25</span>
+<span class="n">t1_epsilon</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ncol</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="o">+</span><span class="n">h_layer</span><span class="p">)</span>
+<span class="n">t2_epsilon</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="m">6</span><span class="p">)</span><span class="o">/</span><span class="n">sqrt</span><span class="p">(</span><span class="n">h_layer</span><span class="m">+10</span><span class="p">)</span>
+<span class="n">t1_random</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">runif</span><span class="p">((</span><span class="n">ncol</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="m">+1</span><span class="p">)</span><span class="o">*</span><span class="m">25</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">25</span><span class="p">,(</span><span class="n">ncol</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="m">+1</span><span class="p">))</span>
+<span class="n">t2_random</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="n">runif</span><span class="p">(</span><span class="m">26</span><span class="o">*</span><span class="m">10</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="m">10</span><span class="p">,</span><span class="m">26</span><span class="p">)</span>
+<span class="n">t1_random</span> <span class="o">=</span> <span class="n">t1_random</span><span class="o">*</span><span class="m">2</span><span class="o">*</span><span class="n">t1_epsilon</span> <span class="o">-</span> <span class="n">t1_epsilon</span>
+<span class="n">t2_random</span> <span class="o">=</span> <span class="n">t2_random</span><span class="o">*</span><span class="m">2</span><span class="o">*</span><span class="n">t2_epsilon</span> <span class="o">-</span> <span class="n">t2_epsilon</span>
+<span class="n">ini</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t1_random</span><span class="p">),</span><span class="n">as.vector</span><span class="p">(</span><span class="n">t2_random</span><span class="p">))</span>
+<span class="n">lambda</span><span class="o">=</span><span class="m">1</span>
+<span class="n">costFunction</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">NN_cost</span><span class="p">(</span><span class="n">train_nl</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">)</span>
+  <span class="n">J</span> <span class="o">=</span> <span class="n">result</span><span class="o">$</span><span class="n">cost</span>
+  <span class="n">grad</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">as.vector</span><span class="p">(</span><span class="n">result</span><span class="o">$</span><span class="n">grad</span><span class="o">$</span><span class="n">t1</span><span class="p">),</span><span class="n">as.vector</span><span class="p">(</span><span class="n">result</span><span class="o">$</span><span class="n">grad</span><span class="o">$</span><span class="n">t2</span><span class="p">))</span>
+  <span class="n">grad</span> <span class="o">=</span> <span class="n">as.matrix</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span><span class="n">length</span><span class="p">(</span><span class="n">grad</span><span class="p">),</span><span class="m">1</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">J</span><span class="o">=</span><span class="n">J</span><span class="p">,</span><span class="n">grad</span><span class="o">=</span><span class="n">grad</span><span class="p">))</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>Optimize the model</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">optimization <span class="o">=</span> fmincg<span class="p">(</span>f<span class="o">=</span>costFunction<span class="p">,</span> X<span class="o">=</span>par<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">500</span><span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">optimization</span> <span class="o">=</span> <span class="n">fmincg</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">costFunction</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">par</span><span class="p">,</span> <span class="n">Maxiter</span><span class="o">=</span><span class="m">500</span><span class="p">)</span></code></pre></figure>
 
 <p>At the end, I use $fmincg$ function to do the optimization. Because $fmincg$ function is more efficient than my own gradient decent function. $fmincg$ is one of the optimization function Andrew Ng used in his online course <a href="https://www.coursera.org/course/ml">Machine Learning</a>. This function was original written in Matlab, I rewrite it into R. Here are the R code for $fmincg$ function.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">fmincg <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>f<span class="p">,</span>X<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
-  length <span class="o">=</span> Maxiter
-  RHO <span class="o">=</span> <span class="m">0.01</span> 
-  SIG <span class="o">=</span> <span class="m">0.5</span>  
-  INT <span class="o">=</span> <span class="m">0.1</span>  
-  EXT <span class="o">=</span> <span class="m">3.0</span>  
-  MAX <span class="o">=</span> <span class="m">20</span>   
-  RATIO <span class="o">=</span> <span class="m">100</span>
-  red <span class="o">=</span> <span class="m">1</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">fmincg</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">X</span><span class="p">,</span> <span class="n">Maxiter</span><span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">length</span> <span class="o">=</span> <span class="n">Maxiter</span>
+  <span class="n">RHO</span> <span class="o">=</span> <span class="m">0.01</span> 
+  <span class="n">SIG</span> <span class="o">=</span> <span class="m">0.5</span>  
+  <span class="n">INT</span> <span class="o">=</span> <span class="m">0.1</span>  
+  <span class="n">EXT</span> <span class="o">=</span> <span class="m">3.0</span>  
+  <span class="n">MAX</span> <span class="o">=</span> <span class="m">20</span>   
+  <span class="n">RATIO</span> <span class="o">=</span> <span class="m">100</span>
+  <span class="n">red</span> <span class="o">=</span> <span class="m">1</span>
   
-  i <span class="o">=</span> <span class="m">0</span>
-  ls_failed <span class="o">=</span> <span class="m">0</span>
-  fX <span class="o">=</span> <span class="kt">numeric</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
-  eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
-  f1 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
-  df1 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
-  i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
-  s <span class="o">=</span> <span class="o">-</span>df1
-  d1 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span><span class="o">-</span>s<span class="p">)</span><span class="o">%*%</span>s
-  z1 <span class="o">=</span> red<span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>d1<span class="p">)</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="n">ls_failed</span> <span class="o">=</span> <span class="m">0</span>
+  <span class="n">fX</span> <span class="o">=</span> <span class="n">numeric</span><span class="p">(</span><span class="m">0</span><span class="p">)</span>
+  <span class="n">eval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+  <span class="n">f1</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">J</span>
+  <span class="n">df1</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">grad</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">df1</span>
+  <span class="n">d1</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="o">-</span><span class="n">s</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
+  <span class="n">z1</span> <span class="o">=</span> <span class="n">red</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span>
   
-  <span class="kr">while</span> <span class="p">(</span>i <span class="o">&lt;</span> <span class="kp">abs</span><span class="p">(</span><span class="kp">length</span><span class="p">))</span> <span class="p">{</span>
-    i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">)</span>
-    X0 <span class="o">=</span> X<span class="p">;</span> f0 <span class="o">=</span> f1<span class="p">;</span> df0 <span class="o">=</span> df1
-    X <span class="o">=</span> X <span class="o">+</span> z1<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s
-    eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
-    f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
-    df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
-    i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
-    d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s<span class="p">;</span>
-    f3 <span class="o">=</span> f1<span class="p">;</span> d3 <span class="o">=</span> d1<span class="p">;</span> z3 <span class="o">=</span> <span class="o">-</span>z1<span class="p">;</span>
-    <span class="kr">if</span><span class="p">(</span><span class="kp">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">){</span>M<span class="o">=</span>MAX<span class="p">}</span><span class="kp">else</span><span class="p">{</span>M<span class="o">=</span><span class="kp">min</span><span class="p">(</span>MAX<span class="p">,</span><span class="o">-</span><span class="kp">length</span><span class="o">-</span>i<span class="p">)}</span>
-    success <span class="o">=</span> <span class="m">0</span><span class="p">;</span> limit <span class="o">=</span> <span class="m">-1</span><span class="p">;</span> 
-    <span class="kr">while</span><span class="p">(</span><span class="m">1</span><span class="p">){</span>
-      <span class="kr">while</span><span class="p">(((</span>f2 <span class="o">&gt;</span> f1<span class="o">+</span>z1<span class="o">*</span>RHO<span class="o">*</span>d1<span class="p">)</span> <span class="o">|</span> <span class="p">(</span>d2 <span class="o">&gt;</span> <span class="o">-</span>SIG<span class="o">*</span>d1<span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span>M <span class="o">&gt;</span> <span class="m">0</span><span class="p">))</span> <span class="p">{</span>
-        limit <span class="o">=</span> z1
-        <span class="kr">if</span> <span class="p">(</span>f2 <span class="o">&gt;</span> f1<span class="p">){</span>
-          z2 <span class="o">=</span> z3 <span class="o">-</span> <span class="p">(</span><span class="m">0.5</span><span class="o">*</span>d3<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">)</span><span class="o">/</span><span class="p">(</span>d3<span class="o">*</span>z3<span class="o">+</span>f2<span class="o">-</span>f3<span class="p">)</span>
-        <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-          A <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span>f2<span class="o">-</span>f3<span class="p">)</span><span class="o">/</span>z3<span class="m">+3</span><span class="o">*</span><span class="p">(</span>d2<span class="o">+</span>d3<span class="p">)</span>                                
-          B <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span>f3<span class="o">-</span>f2<span class="p">)</span><span class="o">-</span>z3<span class="o">*</span><span class="p">(</span>d3<span class="m">+2</span><span class="o">*</span>d2<span class="p">)</span>
-          z2 <span class="o">=</span> <span class="p">(</span><span class="kp">sqrt</span><span class="p">(</span>B<span class="o">*</span>B<span class="o">-</span>A<span class="o">*</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">)</span><span class="o">-</span>B<span class="p">)</span><span class="o">/</span>A<span class="p">}</span>
-        <span class="kr">if</span> <span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span><span class="kp">is.infinite</span><span class="p">(</span>z2<span class="p">)){</span>z2 <span class="o">=</span> z3<span class="o">/</span><span class="m">2</span><span class="p">}</span>
-        z2 <span class="o">=</span> <span class="kp">max</span><span class="p">(</span><span class="kp">min</span><span class="p">(</span>z2<span class="p">,</span> INT<span class="o">*</span>z3<span class="p">),(</span><span class="m">1</span><span class="o">-</span>INT<span class="p">)</span><span class="o">*</span>z3<span class="p">)</span>
-        z1 <span class="o">=</span> z1 <span class="o">+</span> z2
-        X <span class="o">=</span> X <span class="o">+</span> z2<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s
-        eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
-        f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
-        df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
-        M <span class="o">=</span> M <span class="o">-</span> <span class="m">1</span><span class="p">;</span> i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
-        d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s
-        z3 <span class="o">=</span> z3 <span class="o">-</span> z2
+  <span class="k">while</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">abs</span><span class="p">(</span><span class="n">length</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">)</span>
+    <span class="n">X0</span> <span class="o">=</span> <span class="n">X</span><span class="p">;</span> <span class="n">f0</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span> <span class="n">df0</span> <span class="o">=</span> <span class="n">df1</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">z1</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span><span class="n">s</span>
+    <span class="n">eval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">J</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">grad</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span><span class="p">;</span>
+    <span class="n">f3</span> <span class="o">=</span> <span class="n">f1</span><span class="p">;</span> <span class="n">d3</span> <span class="o">=</span> <span class="n">d1</span><span class="p">;</span> <span class="n">z3</span> <span class="o">=</span> <span class="o">-</span><span class="n">z1</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">length</span><span class="o">&gt;</span><span class="m">0</span><span class="p">){</span><span class="n">M</span><span class="o">=</span><span class="n">MAX</span><span class="p">}</span><span class="k">else</span><span class="p">{</span><span class="n">M</span><span class="o">=</span><span class="n">min</span><span class="p">(</span><span class="n">MAX</span><span class="p">,</span><span class="o">-</span><span class="n">length</span><span class="o">-</span><span class="n">i</span><span class="p">)}</span>
+    <span class="n">success</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">limit</span> <span class="o">=</span> <span class="m">-1</span><span class="p">;</span> 
+    <span class="k">while</span><span class="p">(</span><span class="m">1</span><span class="p">){</span>
+      <span class="k">while</span><span class="p">(((</span><span class="n">f2</span> <span class="o">&gt;</span> <span class="n">f1</span><span class="o">+</span><span class="n">z1</span><span class="o">*</span><span class="n">RHO</span><span class="o">*</span><span class="n">d1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">d2</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">SIG</span><span class="o">*</span><span class="n">d1</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">M</span> <span class="o">&gt;</span> <span class="m">0</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">z1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">f2</span> <span class="o">&gt;</span> <span class="n">f1</span><span class="p">){</span>
+          <span class="n">z2</span> <span class="o">=</span> <span class="n">z3</span> <span class="o">-</span> <span class="p">(</span><span class="m">0.5</span><span class="o">*</span><span class="n">d3</span><span class="o">*</span><span class="n">z3</span><span class="o">*</span><span class="n">z3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">d3</span><span class="o">*</span><span class="n">z3</span><span class="o">+</span><span class="n">f2</span><span class="o">-</span><span class="n">f3</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="n">A</span> <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span><span class="n">f2</span><span class="o">-</span><span class="n">f3</span><span class="p">)</span><span class="o">/</span><span class="n">z3</span><span class="m">+3</span><span class="o">*</span><span class="p">(</span><span class="n">d2</span><span class="o">+</span><span class="n">d3</span><span class="p">)</span>                                
+          <span class="n">B</span> <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span><span class="n">f3</span><span class="o">-</span><span class="n">f2</span><span class="p">)</span><span class="o">-</span><span class="n">z3</span><span class="o">*</span><span class="p">(</span><span class="n">d3</span><span class="m">+2</span><span class="o">*</span><span class="n">d2</span><span class="p">)</span>
+          <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">B</span><span class="o">*</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="o">*</span><span class="n">d2</span><span class="o">*</span><span class="n">z3</span><span class="o">*</span><span class="n">z3</span><span class="p">)</span><span class="o">-</span><span class="n">B</span><span class="p">)</span><span class="o">/</span><span class="n">A</span><span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">is.na</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span><span class="o">|</span><span class="n">is.infinite</span><span class="p">(</span><span class="n">z2</span><span class="p">)){</span><span class="n">z2</span> <span class="o">=</span> <span class="n">z3</span><span class="o">/</span><span class="m">2</span><span class="p">}</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">min</span><span class="p">(</span><span class="n">z2</span><span class="p">,</span> <span class="n">INT</span><span class="o">*</span><span class="n">z3</span><span class="p">),(</span><span class="m">1</span><span class="o">-</span><span class="n">INT</span><span class="p">)</span><span class="o">*</span><span class="n">z3</span><span class="p">)</span>
+        <span class="n">z1</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">+</span> <span class="n">z2</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">z2</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span><span class="n">s</span>
+        <span class="n">eval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">J</span>
+        <span class="n">df2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">grad</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">-</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
+        <span class="n">z3</span> <span class="o">=</span> <span class="n">z3</span> <span class="o">-</span> <span class="n">z2</span>
       <span class="p">}</span>
-      <span class="kr">if</span> <span class="p">(</span>f2 <span class="o">&gt;</span> <span class="p">(</span>f1<span class="o">+</span>z1<span class="o">*</span>RHO<span class="o">*</span>d1<span class="p">)</span> <span class="o">|</span> d2 <span class="o">&gt;</span> <span class="o">-</span>SIG<span class="o">*</span>d1<span class="p">)</span> <span class="p">{</span>
-        <span class="kr">break</span>
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>d2 <span class="o">&gt;</span> SIG<span class="o">*</span>d1<span class="p">)</span> <span class="p">{</span>
-        success <span class="o">=</span> <span class="m">1</span><span class="p">;</span> <span class="kr">break</span>
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>M <span class="o">==</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">break</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">f2</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">f1</span><span class="o">+</span><span class="n">z1</span><span class="o">*</span><span class="n">RHO</span><span class="o">*</span><span class="n">d1</span><span class="p">)</span> <span class="o">|</span> <span class="n">d2</span> <span class="o">&gt;</span> <span class="o">-</span><span class="n">SIG</span><span class="o">*</span><span class="n">d1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">break</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">d2</span> <span class="o">&gt;</span> <span class="n">SIG</span><span class="o">*</span><span class="n">d1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">success</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span> <span class="k">break</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">M</span> <span class="o">==</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">break</span>
       <span class="p">}</span>
-      A <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span>f2<span class="o">-</span>f3<span class="p">)</span><span class="o">/</span>z3<span class="m">+3</span><span class="o">*</span><span class="p">(</span>d2<span class="o">+</span>d3<span class="p">)</span>
-      B <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span>f3<span class="o">-</span>f2<span class="p">)</span><span class="o">-</span>z3<span class="o">*</span><span class="p">(</span>d3<span class="m">+2</span><span class="o">*</span>d2<span class="p">)</span>
-      z2 <span class="o">=</span> <span class="o">-</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="o">/</span><span class="p">(</span>B<span class="o">+</span><span class="kp">sqrt</span><span class="p">(</span>B<span class="o">*</span>B<span class="o">-</span>A<span class="o">*</span>d2<span class="o">*</span>z3<span class="o">*</span>z3<span class="p">))</span>
-      <span class="kr">if</span> <span class="p">(</span><span class="kp">is.na</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span><span class="kp">is.infinite</span><span class="p">(</span>z2<span class="p">)</span><span class="o">|</span>z2<span class="o">&lt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">if</span> <span class="p">(</span>limit <span class="o">&lt;-</span><span class="m">0.5</span><span class="p">)</span> <span class="p">{</span>
-          z2 <span class="o">=</span> z1<span class="o">*</span><span class="p">(</span>EXT<span class="m">-1</span><span class="p">)</span>
-        <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-          z2 <span class="o">=</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">/</span><span class="m">2</span>
+      <span class="n">A</span> <span class="o">=</span> <span class="m">6</span><span class="o">*</span><span class="p">(</span><span class="n">f2</span><span class="o">-</span><span class="n">f3</span><span class="p">)</span><span class="o">/</span><span class="n">z3</span><span class="m">+3</span><span class="o">*</span><span class="p">(</span><span class="n">d2</span><span class="o">+</span><span class="n">d3</span><span class="p">)</span>
+      <span class="n">B</span> <span class="o">=</span> <span class="m">3</span><span class="o">*</span><span class="p">(</span><span class="n">f3</span><span class="o">-</span><span class="n">f2</span><span class="p">)</span><span class="o">-</span><span class="n">z3</span><span class="o">*</span><span class="p">(</span><span class="n">d3</span><span class="m">+2</span><span class="o">*</span><span class="n">d2</span><span class="p">)</span>
+      <span class="n">z2</span> <span class="o">=</span> <span class="o">-</span><span class="n">d2</span><span class="o">*</span><span class="n">z3</span><span class="o">*</span><span class="n">z3</span><span class="o">/</span><span class="p">(</span><span class="n">B</span><span class="o">+</span><span class="n">sqrt</span><span class="p">(</span><span class="n">B</span><span class="o">*</span><span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="o">*</span><span class="n">d2</span><span class="o">*</span><span class="n">z3</span><span class="o">*</span><span class="n">z3</span><span class="p">))</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">is.na</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span><span class="o">|</span><span class="n">is.infinite</span><span class="p">(</span><span class="n">z2</span><span class="p">)</span><span class="o">|</span><span class="n">z2</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">limit</span> <span class="o">&lt;</span><span class="m">-0.5</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">z2</span> <span class="o">=</span> <span class="n">z1</span><span class="o">*</span><span class="p">(</span><span class="n">EXT</span><span class="m">-1</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">limit</span><span class="o">-</span><span class="n">z1</span><span class="p">)</span><span class="o">/</span><span class="m">2</span>
         <span class="p">}</span>
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span>z2<span class="o">+</span>z1<span class="p">)</span> <span class="o">&gt;</span> limit<span class="p">)){</span>
-        z2 <span class="o">=</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">/</span><span class="m">2</span>
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&lt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span>z2<span class="o">+</span>z1<span class="p">)</span> <span class="o">&gt;</span> z1<span class="o">*</span>EXT<span class="p">))</span> <span class="p">{</span>
-        z2 <span class="o">=</span> z1<span class="o">*</span><span class="p">(</span>EXT<span class="m">-1</span><span class="p">)</span>
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">(</span>z2 <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span>z3<span class="o">*</span>INT<span class="p">))</span> <span class="p">{</span>
-        z2 <span class="o">=</span> <span class="o">-</span>z3<span class="o">*</span>INT
-      <span class="p">}</span> <span class="kr">else</span> <span class="kr">if</span> <span class="p">((</span>limit <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span>z2 <span class="o">&lt;</span> <span class="p">(</span>limit<span class="o">-</span>z1<span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1.0</span><span class="o">-</span>INT<span class="p">)))</span> <span class="p">{</span>
-        z2 <span class="o">=</span> <span class="p">(</span>limit <span class="o">-</span> z1<span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1</span> <span class="o">-</span> INT<span class="p">)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">limit</span> <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">z2</span><span class="o">+</span><span class="n">z1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">limit</span><span class="p">)){</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">limit</span><span class="o">-</span><span class="n">z1</span><span class="p">)</span><span class="o">/</span><span class="m">2</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">limit</span> <span class="o">&lt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">z2</span><span class="o">+</span><span class="n">z1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">z1</span><span class="o">*</span><span class="n">EXT</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="n">z1</span><span class="o">*</span><span class="p">(</span><span class="n">EXT</span><span class="m">-1</span><span class="p">)</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">z2</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="n">z3</span><span class="o">*</span><span class="n">INT</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="o">-</span><span class="n">z3</span><span class="o">*</span><span class="n">INT</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">((</span><span class="n">limit</span> <span class="o">&gt;</span> <span class="m">-0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">z2</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">limit</span><span class="o">-</span><span class="n">z1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1.0</span><span class="o">-</span><span class="n">INT</span><span class="p">)))</span> <span class="p">{</span>
+        <span class="n">z2</span> <span class="o">=</span> <span class="p">(</span><span class="n">limit</span> <span class="o">-</span> <span class="n">z1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="m">1</span> <span class="o">-</span> <span class="n">INT</span><span class="p">)</span>
       <span class="p">}</span>
-      f3 <span class="o">=</span> f2<span class="p">;</span> d3 <span class="o">=</span> d2<span class="p">;</span> z3 <span class="o">=</span> <span class="o">-</span>z2<span class="p">;</span> 
-      z1 <span class="o">=</span> z1 <span class="o">+</span> z2<span class="p">;</span> X <span class="o">=</span> X <span class="o">+</span> z2<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s<span class="p">;</span>
-      eval <span class="o">=</span> f<span class="p">(</span>X<span class="p">)</span>
-      f2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>J
-      df2 <span class="o">=</span> <span class="kp">eval</span><span class="o">$</span>grad
-      M <span class="o">=</span> M <span class="o">-</span> <span class="m">1</span><span class="p">;</span> i <span class="o">=</span> i <span class="o">+</span> <span class="p">(</span><span class="kp">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
-      d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>s
+      <span class="n">f3</span> <span class="o">=</span> <span class="n">f2</span><span class="p">;</span> <span class="n">d3</span> <span class="o">=</span> <span class="n">d2</span><span class="p">;</span> <span class="n">z3</span> <span class="o">=</span> <span class="o">-</span><span class="n">z2</span><span class="p">;</span> 
+      <span class="n">z1</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">+</span> <span class="n">z2</span><span class="p">;</span> <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">z2</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span><span class="n">s</span><span class="p">;</span>
+      <span class="n">eval</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+      <span class="n">f2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">J</span>
+      <span class="n">df2</span> <span class="o">=</span> <span class="n">eval</span><span class="o">$</span><span class="n">grad</span>
+      <span class="n">M</span> <span class="o">=</span> <span class="n">M</span> <span class="o">-</span> <span class="m">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">length</span><span class="o">&lt;</span><span class="m">0</span><span class="p">)</span>
+      <span class="n">d2</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
     <span class="p">}</span>
     
-    <span class="kr">if</span> <span class="p">(</span>success<span class="p">)</span> <span class="p">{</span>
-      f1 <span class="o">=</span> f2<span class="p">;</span> fX <span class="o">=</span> <span class="kp">rbind</span><span class="p">(</span>fX<span class="p">,</span> f1<span class="p">)</span>
-      <span class="kp">print</span><span class="p">(</span><span class="kp">cat</span><span class="p">(</span><span class="s">&#39;Iteration  &#39;</span><span class="p">,</span>i<span class="p">,</span><span class="s">&#39;| Cost:&#39;</span><span class="p">,</span>f1<span class="p">))</span>
-      temp <span class="o">=</span> <span class="p">(</span><span class="kp">t</span><span class="p">(</span>df2<span class="p">)</span><span class="o">%*%</span>df2<span class="o">-</span><span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>df2<span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>df1<span class="p">)</span>
-      s <span class="o">=</span> temp<span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span>s <span class="o">-</span> df2
-      tmp <span class="o">=</span> df1<span class="p">;</span> df1 <span class="o">=</span> df2<span class="p">;</span> df2 <span class="o">=</span> tmp<span class="p">;</span>
-      d2 <span class="o">=</span> <span class="kp">t</span><span class="p">(</span>df1<span class="p">)</span><span class="o">%*%</span>s
-      <span class="kr">if</span> <span class="p">(</span>d2<span class="o">&gt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
-        s <span class="o">=</span> <span class="o">-</span>df1
-        d2 <span class="o">=</span> <span class="o">-</span><span class="kp">t</span><span class="p">(</span>s<span class="p">)</span><span class="o">%*%</span>s
+    <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">f1</span> <span class="o">=</span> <span class="n">f2</span><span class="p">;</span> <span class="n">fX</span> <span class="o">=</span> <span class="n">rbind</span><span class="p">(</span><span class="n">fX</span><span class="p">,</span> <span class="n">f1</span><span class="p">)</span>
+      <span class="n">print</span><span class="p">(</span><span class="n">cat</span><span class="p">(</span><span class="s1">'Iteration  '</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="s1">'| Cost:'</span><span class="p">,</span><span class="n">f1</span><span class="p">))</span>
+      <span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span><span class="o">%*%</span><span class="n">df2</span><span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="o">%*%</span><span class="n">df2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">t</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="o">%*%</span><span class="n">df1</span><span class="p">)</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="n">temp</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">*</span><span class="n">s</span> <span class="o">-</span> <span class="n">df2</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="n">df1</span><span class="p">;</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">df2</span><span class="p">;</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+      <span class="n">d2</span> <span class="o">=</span> <span class="n">t</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">d2</span><span class="o">&gt;</span><span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">df1</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
       <span class="p">}</span>
-      z1 <span class="o">=</span> z1 <span class="o">*</span> <span class="kp">min</span><span class="p">(</span>RATIO<span class="p">,</span> d1<span class="o">/</span><span class="p">(</span>d2<span class="m">-2.2251e-308</span><span class="p">))</span>
-      d1 <span class="o">=</span> d2
-      ls_failed <span class="o">=</span> <span class="m">0</span>
-    <span class="p">}</span> <span class="kr">else</span> <span class="p">{</span>
-      X <span class="o">=</span> X0<span class="p">;</span> f1 <span class="o">=</span> f0<span class="p">;</span> df1 <span class="o">=</span> df0<span class="p">;</span>
-      <span class="kr">if</span> <span class="p">(</span>ls_failed<span class="o">|</span>i <span class="o">&gt;</span> <span class="kp">abs</span><span class="p">(</span><span class="kp">length</span><span class="p">))</span> <span class="p">{</span>
-        <span class="kr">break</span>
+      <span class="n">z1</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">*</span> <span class="n">min</span><span class="p">(</span><span class="n">RATIO</span><span class="p">,</span> <span class="n">d1</span><span class="o">/</span><span class="p">(</span><span class="n">d2</span><span class="m">-2.2251e-308</span><span class="p">))</span>
+      <span class="n">d1</span> <span class="o">=</span> <span class="n">d2</span>
+      <span class="n">ls_failed</span> <span class="o">=</span> <span class="m">0</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">X</span> <span class="o">=</span> <span class="n">X0</span><span class="p">;</span> <span class="n">f1</span> <span class="o">=</span> <span class="n">f0</span><span class="p">;</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">df0</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">ls_failed</span><span class="o">|</span><span class="n">i</span> <span class="o">&gt;</span> <span class="n">abs</span><span class="p">(</span><span class="n">length</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">break</span>
       <span class="p">}</span>
-      tmp <span class="o">=</span> df1<span class="p">;</span> df1 <span class="o">=</span> df2<span class="p">;</span> df2 <span class="o">=</span> tmp<span class="p">;</span>
-      s <span class="o">=</span> <span class="o">-</span>df1
-      d1 <span class="o">=</span> <span class="o">-</span><span class="kp">t</span><span class="p">(</span>s<span class="p">)</span><span class="o">%*%</span>s
-      z1 <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span>d1<span class="p">)</span>
-      ls_failed <span class="o">=</span> <span class="m">1</span>
+      <span class="n">tmp</span> <span class="o">=</span> <span class="n">df1</span><span class="p">;</span> <span class="n">df1</span> <span class="o">=</span> <span class="n">df2</span><span class="p">;</span> <span class="n">df2</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">;</span>
+      <span class="n">s</span> <span class="o">=</span> <span class="o">-</span><span class="n">df1</span>
+      <span class="n">d1</span> <span class="o">=</span> <span class="o">-</span><span class="n">t</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">%*%</span><span class="n">s</span>
+      <span class="n">z1</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">d1</span><span class="p">)</span>
+      <span class="n">ls_failed</span> <span class="o">=</span> <span class="m">1</span>
     <span class="p">}</span>
   <span class="p">}</span>
-  <span class="kr">return</span><span class="p">(</span><span class="kt">list</span><span class="p">(</span>par<span class="o">=</span>X<span class="p">,</span>cost<span class="o">=</span>fX<span class="p">))</span>
-<span class="p">}</span></code></pre></div>
+  <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span><span class="n">par</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="n">cost</span><span class="o">=</span><span class="n">fX</span><span class="p">))</span>
+<span class="p">}</span></code></pre></figure>
 
 <h2 id="training-result">Training Result</h2>
 
 <p>The result is achieve by training this model with 29400 data in 200000 iteration.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">first_try <span class="o">=</span> fmincg<span class="p">(</span>f<span class="o">=</span>costFunction<span class="p">,</span> X<span class="o">=</span>ini<span class="p">,</span> Maxiter<span class="o">=</span><span class="m">200000</span><span class="p">)</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">first_try</span> <span class="o">=</span> <span class="n">fmincg</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="n">costFunction</span><span class="p">,</span> <span class="n">X</span><span class="o">=</span><span class="n">ini</span><span class="p">,</span> <span class="n">Maxiter</span><span class="o">=</span><span class="m">200000</span><span class="p">)</span></code></pre></figure>
 
 <p>$ckeck_accurate$ function is build up to check the accurate of my model ues testing data set and validation data set.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">check_accurate <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>data<span class="p">,</span> y<span class="p">,</span> <span class="kp">t</span><span class="p">,</span> h_layer<span class="o">=</span><span class="m">25</span><span class="p">,</span>lambda<span class="p">,</span>num_labels<span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
-  fit_model <span class="o">=</span> NN_cost<span class="p">(</span>data<span class="p">,</span>y<span class="p">,</span>init<span class="o">=</span><span class="kp">t</span><span class="p">,</span>h_layer<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">,</span>num_labels<span class="p">)</span>
-  fit_matirx <span class="o">=</span> fit_model<span class="o">$</span>h
-  fit_values <span class="o">=</span> <span class="kp">apply</span><span class="p">(</span>fit_matirx<span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="kp">which.max</span><span class="p">)</span>
-  fit_values <span class="o">=</span> <span class="kp">as.vector</span><span class="p">(</span>fit_values<span class="p">)</span>
-  y <span class="o">=</span> <span class="kp">as.vector</span><span class="p">(</span>y<span class="p">)</span>
-  accurate <span class="o">=</span> <span class="kp">sum</span><span class="p">(</span>fit_values<span class="o">==</span>y<span class="p">)</span><span class="o">/</span><span class="kp">length</span><span class="p">(</span>y<span class="p">)</span>
-  result <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>fit <span class="o">=</span> fit_values<span class="p">,</span> acu <span class="o">=</span> accurate<span class="p">)</span>
-  <span class="kr">return</span><span class="p">(</span>result<span class="p">)</span>
-<span class="p">}</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">check_accurate</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">h_layer</span><span class="o">=</span><span class="m">25</span><span class="p">,</span><span class="n">lambda</span><span class="p">,</span><span class="n">num_labels</span><span class="o">=</span><span class="m">10</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">fit_model</span> <span class="o">=</span> <span class="n">NN_cost</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">init</span><span class="o">=</span><span class="n">t</span><span class="p">,</span><span class="n">h_layer</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">,</span><span class="n">num_labels</span><span class="p">)</span>
+  <span class="n">fit_matirx</span> <span class="o">=</span> <span class="n">fit_model</span><span class="o">$</span><span class="n">h</span>
+  <span class="n">fit_values</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">fit_matirx</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">which.max</span><span class="p">)</span>
+  <span class="n">fit_values</span> <span class="o">=</span> <span class="n">as.vector</span><span class="p">(</span><span class="n">fit_values</span><span class="p">)</span>
+  <span class="n">y</span> <span class="o">=</span> <span class="n">as.vector</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+  <span class="n">accurate</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">fit_values</span><span class="o">==</span><span class="n">y</span><span class="p">)</span><span class="o">/</span><span class="n">length</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+  <span class="n">result</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">fit</span> <span class="o">=</span> <span class="n">fit_values</span><span class="p">,</span> <span class="n">acu</span> <span class="o">=</span> <span class="n">accurate</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>The rest of the data is been seperate as test set and validate set</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">test_valid_data <span class="o">=</span> data_all<span class="p">[</span><span class="o">-</span>train_indx<span class="p">,]</span>
-test_size <span class="o">=</span> <span class="kp">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="kp">nrow</span><span class="p">(</span>test_valid_data<span class="p">))</span>
-test_ind <span class="o">=</span> <span class="kp">sample</span><span class="p">(</span><span class="kp">seq_len</span><span class="p">(</span><span class="kp">nrow</span><span class="p">(</span>test_valid_data<span class="p">)),</span> size <span class="o">=</span> test_size<span class="p">)</span>
-test_data <span class="o">=</span> test_valid_data<span class="p">[</span>test_ind<span class="p">,]</span>
-valid_data <span class="o">=</span> test_valid_data<span class="p">[</span><span class="o">-</span>test_ind<span class="p">,]</span></code></pre></div>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">test_valid_data</span> <span class="o">=</span> <span class="n">data_all</span><span class="p">[</span><span class="o">-</span><span class="n">train_indx</span><span class="p">,]</span>
+<span class="n">test_size</span> <span class="o">=</span> <span class="n">floor</span><span class="p">(</span><span class="m">0.7</span><span class="o">*</span><span class="n">nrow</span><span class="p">(</span><span class="n">test_valid_data</span><span class="p">))</span>
+<span class="n">test_ind</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">seq_len</span><span class="p">(</span><span class="n">nrow</span><span class="p">(</span><span class="n">test_valid_data</span><span class="p">)),</span> <span class="n">size</span> <span class="o">=</span> <span class="n">test_size</span><span class="p">)</span>
+<span class="n">test_data</span> <span class="o">=</span> <span class="n">test_valid_data</span><span class="p">[</span><span class="n">test_ind</span><span class="p">,]</span>
+<span class="n">valid_data</span> <span class="o">=</span> <span class="n">test_valid_data</span><span class="p">[</span><span class="o">-</span><span class="n">test_ind</span><span class="p">,]</span></code></pre></figure>
 
 <p>Setting up the test set and ckeck the accurate.</p>
 
-<div class="highlight"><pre><code class="language-r" data-lang="r">test <span class="o">=</span> test_data<span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
-test <span class="o">=</span> <span class="kp">data.matrix</span><span class="p">(</span>test<span class="p">)</span>
-test_y <span class="o">=</span> test_data<span class="o">$</span>label
-test_y <span class="o">=</span> <span class="kp">replace</span><span class="p">(</span>test_y<span class="p">,</span>test_y<span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
-test_nl <span class="o">=</span> <span class="p">(</span>test<span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">test</span> <span class="o">=</span> <span class="n">test_data</span><span class="p">[,</span><span class="m">-1</span><span class="p">]</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">data.matrix</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+<span class="n">test_y</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">$</span><span class="n">label</span>
+<span class="n">test_y</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">test_y</span><span class="p">,</span><span class="n">test_y</span><span class="o">==</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">)</span>
+<span class="n">test_nl</span> <span class="o">=</span> <span class="p">(</span><span class="n">test</span><span class="m">-125</span><span class="p">)</span><span class="o">/</span><span class="m">255</span>
 
-test_accurate <span class="o">=</span> check_accurate<span class="p">(</span>test_nl<span class="p">,</span>test_y<span class="p">,</span>par<span class="p">,</span>lambda<span class="o">=</span>lambda<span class="p">)</span>
-test_accurate<span class="o">$</span>acu</code></pre></div>
+<span class="n">test_accurate</span> <span class="o">=</span> <span class="n">check_accurate</span><span class="p">(</span><span class="n">test_nl</span><span class="p">,</span><span class="n">test_y</span><span class="p">,</span><span class="n">par</span><span class="p">,</span><span class="n">lambda</span><span class="o">=</span><span class="n">lambda</span><span class="p">)</span>
+<span class="n">test_accurate</span><span class="o">$</span><span class="n">acu</span></code></pre></figure>
 
 <h2 id="refference">Refference</h2>
 <ul>
